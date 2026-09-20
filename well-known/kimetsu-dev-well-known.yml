@@ -1,0 +1,183 @@
+generated: '2026-09-19'
+method: searched
+description: 'Probe of the /.well-known/ discovery surface on every host the record knows: kimetsu.dev (website
+  + docs), www.kimetsu.dev (301s every path to the apex), and agents.kimetsu.dev (the OpenAPI servers[0] host, the
+  A2A card host and the A2A endpoint host). There is no hosted MCP host to probe: Kimetsu''s MCP server is a local
+  stdio binary and Kimetsu Remote is self-hosted by each operator. The Sidequest Commons human site is a GitHub Pages
+  path (rodcor.github.io/sidequest-commons) and 404s both agent-card paths. Every 404 on kimetsu.dev is a real HTTP
+  404 with the site''s 13,236-byte HTML 404 page; every 404 on agents.kimetsu.dev is a real HTTP 404 with the JSON
+  body {"error":"not_found"}. A negative-control path 404d on both hosts. The two extra rows beyond the closed list
+  (/.well-known/kimetsu-agents.json and /agent-gateway.json) were probed only because robots.txt, llms.txt and the
+  discovery manifest''s own fallback field name them — no glob was used. No OAuth/OIDC discovery document exists
+  on any host, which matches the provider''s stated model: every gateway read is anonymous and credentials are rejected
+  with 400.'
+path_echo_control: passed
+negative_control: /.well-known/kimetsu-dev-negative-control-a768ab07.json -> 404 on kimetsu.dev and agents.kimetsu.dev
+  (301 to apex on www)
+hit_count: 5
+hosts:
+- host: https://kimetsu.dev
+  role: website + docs
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+    type: text/html
+    note: HTML 404 page (HTTP 404)
+  - path: /.well-known/openid-configuration
+    status: 404
+    type: text/html
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+    type: text/html
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+    type: text/html
+  - path: /.well-known/api-catalog
+    status: 404
+    type: text/html
+  - path: /.well-known/api-catalog.json
+    status: 404
+    type: text/html
+  - path: /.well-known/ai-plugin.json
+    status: 404
+    type: text/html
+  - path: /.well-known/ucp.json
+    status: 404
+    type: text/html
+  - path: /.well-known/acp.json
+    status: 404
+    type: text/html
+  - path: /.well-known/aauth-resource.json
+    status: 404
+    type: text/html
+  - path: /.well-known/apis.json
+    status: 404
+    type: text/html
+  - path: /apis.json
+    status: 404
+    type: text/html
+  - path: /apis.yml
+    status: 404
+    type: text/html
+  - path: /.well-known/agent-card.json
+    status: 404
+    type: text/html
+  - path: /.well-known/agent.json
+    status: 404
+    type: text/html
+  - path: /.well-known/mcp.json
+    status: 404
+    type: text/html
+  - path: /.well-known/kimetsu-agents.json
+    status: 200
+    type: application/json
+    file: kimetsu-dev-kimetsu-agents.json
+    note: Provider-defined domain-level discovery pointer (schema https://kimetsu.dev/schemas/well-known-agent-directory-v1.schema.json,
+      saved in json-schema/). Names the gateway, the llms.txt, the A2A card URL and states authentication none / read_only
+      true. Also served at the non-well-known alias /well-known/kimetsu-agents.json (200, same body), which llms.txt
+      describes as the pre-cutover location. Named in robots.txt.
+  - path: /agent-gateway.json
+    status: 200
+    type: application/json
+    file: kimetsu-dev-agent-gateway-fallback.json
+    note: Static fallback copy of the gateway directory (schema https://kimetsu.dev/schemas/agent-directory-v1.schema.json);
+      probed because the well-known pointer's fallback field names it. Not a /.well-known/ path.
+- host: https://www.kimetsu.dev
+  role: www alias
+  documents:
+  - path: /.well-known/security.txt
+    status: 301
+    note: Every probed path on www 301s to the apex (167-byte redirect body); no document is served from www itself.
+  - path: /.well-known/openid-configuration
+    status: 301
+  - path: /.well-known/oauth-authorization-server
+    status: 301
+  - path: /.well-known/oauth-protected-resource
+    status: 301
+  - path: /.well-known/api-catalog
+    status: 301
+  - path: /.well-known/ai-plugin.json
+    status: 301
+  - path: /.well-known/ucp.json
+    status: 301
+  - path: /.well-known/acp.json
+    status: 301
+  - path: /.well-known/aauth-resource.json
+    status: 301
+  - path: /.well-known/apis.json
+    status: 301
+  - path: /apis.json
+    status: 301
+  - path: /apis.yml
+    status: 301
+  - path: /.well-known/agent-card.json
+    status: 301
+  - path: /.well-known/agent.json
+    status: 301
+- host: https://agents.kimetsu.dev
+  role: api (OpenAPI servers[0]) + a2a card + a2a endpoint
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+    type: application/json
+    note: '{"error":"not_found","message":"No public gateway route exists at this path."}'
+  - path: /.well-known/openid-configuration
+    status: 404
+    type: application/json
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+    type: application/json
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+    type: application/json
+  - path: /.well-known/api-catalog
+    status: 404
+    type: application/json
+  - path: /.well-known/api-catalog.json
+    status: 404
+    type: application/json
+  - path: /.well-known/ai-plugin.json
+    status: 404
+    type: application/json
+  - path: /.well-known/ucp.json
+    status: 404
+    type: application/json
+  - path: /.well-known/acp.json
+    status: 404
+    type: application/json
+  - path: /.well-known/aauth-resource.json
+    status: 404
+    type: application/json
+  - path: /.well-known/apis.json
+    status: 404
+    type: application/json
+  - path: /apis.json
+    status: 404
+    type: application/json
+  - path: /apis.yml
+    status: 404
+    type: application/json
+  - path: /.well-known/agent-card.json
+    status: 200
+    type: application/json
+    file: kimetsu-dev-agent-card.json
+    note: A2A Agent Card (0.3.0 by default, 1.0 with A2A-Version header); graded in a2a/kimetsu-dev-a2a.yml.
+  - path: /.well-known/agent.json
+    status: 200
+    type: application/json
+    file: kimetsu-dev-agent-card.json
+    note: Legacy A2A path; byte-identical to agent-card.json.
+  - path: /.well-known/kimetsu-agents.json
+    status: 200
+    type: application/json
+    file: kimetsu-dev-kimetsu-agents-agents-host.json
+    note: Same document family as the apex pointer, minus the $schema key (524 bytes vs 611). Listed in the gateway OpenAPI
+      as get_well_known_directory.
+  - path: /.well-known/mcp.json
+    status: 404
+    type: application/json
+  - path: /agent-gateway.json
+    status: 200
+    type: application/json
+    note: Alias of the gateway root directory (get_agent_gateway_alias in the OpenAPI); identical to GET / and not saved
+      twice.

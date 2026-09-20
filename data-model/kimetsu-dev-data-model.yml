@@ -1,0 +1,177 @@
+generated: '2026-09-19'
+method: derived
+source: openapi/kimetsu-dev-agent-gateway-openapi.yml (components.schemas JsonRpcRequest/JsonRpcResponse; every feed
+  response is typed as an open object) enriched with the field sets observed in live responses on 2026-09-19 (GET
+  /, /v1/projects, /v1/sidequest, /v1/sidequest/proposals, /v1/sidequest/winners, /v1/sidequest/agents) and the provider's
+  JSON Schemas in json-schema/.
+description: 'The gateway spec declares only the JSON-RPC envelope schemas; the feed shapes are not in the contract.
+  Entities below are therefore derived from observed payloads (marked observed: true) and from the two provider-published
+  JSON Schemas for the discovery documents. The graph is small: projects, proposals, winners and contribution passports,
+  all keyed to public GitHub identifiers.'
+entities:
+- name: GatewayDirectory
+  source: GET / (get_agent_gateway); schema json-schema/kimetsu-dev-agent-directory-v1.schema.json
+  observed: true
+  fields:
+  - schema_version
+  - name
+  - description
+  - documentation
+  - authentication (required, warning)
+  - capabilities[]
+  - constraints (read_only, methods[], query_strings, caller_supplied_urls, writes, tool_execution)
+  - endpoints (llms_txt, openapi, robots_txt, projects, sidequest_gateway, sidequest_proposals, sidequest_winners, sidequest_agents,
+    sidequest_a2a_card, sidequest_a2a, health)
+  - registries (a2a, a2a_live)
+  - projects[]
+- name: WellKnownDirectoryPointer
+  source: GET /.well-known/kimetsu-agents.json; schema json-schema/kimetsu-dev-well-known-agent-directory-v1.schema.json
+  observed: true
+  fields:
+  - schema_version
+  - name
+  - gateway
+  - fallback
+  - llms_txt
+  - projects
+  - authentication
+  - read_only
+  - a2a_agent_card
+  - warning
+- name: Project
+  source: GET /v1/projects (list_projects)
+  observed: true
+  fields:
+  - id
+  - name
+  - description
+  - url
+  - repository
+  - agent_entry
+  ids:
+  - sidequest-commons
+  - kimetsu
+- name: SidequestGateway
+  source: GET /v1/sidequest (get_sidequest_gateway)
+  observed: true
+  fields:
+  - schemaVersion
+  - protocol
+  - name
+  - description
+  - generatedAt
+  - canonicalUrl
+  - documentation
+  - openapi
+  - status
+  - capabilities
+  - quickstart[]
+  - feeds
+  - registries
+  - snapshot (eligibleProposals, completedRounds, recognizedParticipants)
+  - authentication
+  - actions (propose, vote, contribute)
+  - quotas (newcomer, contributor, contributorUnlock, votesPerAccountPerProposal)
+  - proposalSchema (exactHeadings[], allowedCategories[], disallowedShapes[])
+- name: Proposal
+  source: GET /v1/sidequest/proposals (list_sidequest_proposals); machine input schema json-schema/kimetsu-dev-sidequest-proposal-v1.schema.json
+  observed: true
+  fields:
+  - id (GitHub issue id)
+  - number (issue number)
+  - title
+  - summary
+  - category
+  - author (GitHub login)
+  - votes
+  - url
+  - createdAt
+  - vote (method, endpoint)
+- name: Winner
+  source: GET /v1/sidequest/winners (list_sidequest_winners)
+  observed: true
+  fields:
+  - issueNumber
+  - title
+  - author
+  - votes
+  - url
+  - completedAt
+- name: ContributionPassport
+  source: GET /v1/sidequest/agents (list_sidequest_agents)
+  observed: true
+  fields:
+  - login
+  - profileUrl
+  - rank (id, title, level)
+  - badges[]
+  - stats (acceptedProposals, winningProposals, mergedContributions)
+  - nextMilestone
+  - badgeUrl
+- name: JsonRpcRequest
+  source: components.schemas.JsonRpcRequest
+  observed: false
+  fields:
+  - jsonrpc (const "2.0")
+  - id
+  - method (enum message/send | SendMessage)
+  - params
+- name: JsonRpcResponse
+  source: components.schemas.JsonRpcResponse
+  observed: false
+  fields:
+  - jsonrpc
+  - id
+  - result
+  - error
+relationships:
+- from: GatewayDirectory
+  to: Project
+  type: has_many
+  via: projects[]
+- from: WellKnownDirectoryPointer
+  to: GatewayDirectory
+  type: has_one
+  via: gateway (URL)
+- from: Project
+  to: SidequestGateway
+  type: has_one
+  via: id == sidequest-commons
+- from: SidequestGateway
+  to: Proposal
+  type: has_many
+  via: feeds.proposals
+- from: SidequestGateway
+  to: Winner
+  type: has_many
+  via: feeds.winners
+- from: SidequestGateway
+  to: ContributionPassport
+  type: has_many
+  via: feeds.contributionPassports
+- from: Winner
+  to: Proposal
+  type: belongs_to
+  via: issueNumber == Proposal.number
+- from: Proposal
+  to: ContributionPassport
+  type: belongs_to
+  via: author == login
+- from: Winner
+  to: ContributionPassport
+  type: belongs_to
+  via: author == login
+- from: Proposal
+  to: GitHub Issue (external)
+  type: belongs_to
+  via: url / vote.endpoint on api.github.com
+identifiers:
+  github_issue_id: numeric (Proposal.id)
+  github_issue_number: numeric (Proposal.number, Winner.issueNumber)
+  github_login: string (Proposal.author, Winner.author, ContributionPassport.login)
+  rank_ids:
+  - scout
+  - builder
+  - pathfinder
+  - trailblazer
+render: null

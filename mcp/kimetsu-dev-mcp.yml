@@ -1,0 +1,151 @@
+generated: '2026-09-19'
+method: searched
+status: published
+source: https://kimetsu.dev/docs/how-kimetsu-works/interfaces/
+sources:
+- https://kimetsu.dev/docs/how-kimetsu-works/interfaces/
+- https://kimetsu.dev/docs/install/
+- https://kimetsu.dev/docs/remote/
+- https://registry.npmjs.org/kimetsu-ai
+- https://crates.io/api/v1/crates/kimetsu-cli
+- https://github.com/RodCor/kimetsu
+description: 'Kimetsu ships its MCP server inside the kimetsu binary: `kimetsu mcp serve` is a local stdio server
+  that hosts (Claude Code, Codex, Cursor, Pi, OpenClaw, Gemini CLI) launch per project, exposing ~28 kimetsu_* tools
+  over a per-project SQLite brain. `kimetsu setup --host <agent>` / `kimetsu plugin install <host>` write the host-native
+  MCP config (.mcp.json + .claude/settings.json for Claude Code, .codex/ for Codex, openclaw.json, a Pi extension)
+  plus the hook wiring. There is NO provider-hosted endpoint: the only HTTP MCP surface is Kimetsu Remote (beta),
+  a separate `kimetsu-remote` server binary an operator runs on their own machine (bearer tokens, one brain per repo
+  at https://<your-server>/mcp/<repo-id>). The tool list below is transcribed from the Interfaces page; inputSchema
+  per tool requires a local `kimetsu mcp serve` + tools/list, which this pass did not run.'
+deployment:
+  mode: local-stdio
+  endpoint: null
+  install: npm install -g kimetsu-ai && kimetsu setup --host claude-code
+  command: kimetsu mcp serve
+  package: https://www.npmjs.com/package/kimetsu-ai
+  alt_packages:
+  - cargo install kimetsu-cli
+  - https://github.com/RodCor/kimetsu/releases (prebuilt lean/embeddings archives for Linux, macOS, Windows)
+  auth: none
+  verified: searched
+  transport: stdio
+  hosts_supported:
+  - claude-code
+  - codex
+  - cursor
+  - pi
+  - openclaw
+  - gemini-cli
+  self_hosted_remote:
+    product: Kimetsu Remote (beta)
+    package: https://www.npmjs.com/package/kimetsu-remote
+    install: npm install -g kimetsu-remote
+    serve: kimetsu-remote serve --addr 0.0.0.0:8787 --data /srv/kimetsu-brains --token <secret> --rate-limit 120
+    endpoint_template: https://<your-server>:8787/mcp/<repo-id>
+    client_wiring: kimetsu plugin install claude-code --remote https://kimetsu.example.com:8787
+    auth: bearer token per teammate (KIMETSU_REMOTE_TOKEN), plain HTTP unless --features tls or a TLS proxy
+    unauthenticated_routes:
+    - GET /healthz
+    - GET /metrics (Prometheus text, aggregate-only)
+    rate_limit_default: 120 req/min per token (0 = off); 429 when exceeded
+    note: Operator-run, not provider-hosted; recorded here so the remote mode is not mistaken for a public endpoint.
+      The docs mark it beta with possible breaking changes before stable.
+  registry:
+    official_mcp_registry: not listed (registry.modelcontextprotocol.io/v0/servers?search=kimetsu returned 0 on
+      2026-09-19)
+  note: 'The A2A endpoint https://agents.kimetsu.dev/a2a/sidequest is NOT an MCP server: POST tools/list there returned
+    JSON-RPC -32601 Method not found (probed 2026-09-19).'
+server:
+  name: kimetsu
+  transport: stdio
+  version: 2.8.0
+  version_source: npm kimetsu-ai / crates.io kimetsu-cli, published 2026-09-09
+  repository: https://github.com/RodCor/kimetsu
+  license: MIT OR Apache-2.0
+  response_envelope: 'Every tool returns {"ok": true, "usage": {...}} so the host gets usage guidance with the data.'
+tools:
+- name: kimetsu_brain_context
+  description: Retrieve a context bundle (returns skipped true when nothing relevant, at zero overhead)
+  category: retrieval
+- name: kimetsu_brain_record
+  description: Capture a lesson; runs semantic dedup
+  category: memory-write
+- name: kimetsu_brain_status
+  description: Brain health + memory counts
+  category: status
+- name: kimetsu_brain_insights
+  description: Effectiveness analytics over recent runs
+  category: analytics
+- name: kimetsu_brain_memory_add
+  description: Direct memory create
+  category: memory-write
+- name: kimetsu_brain_memory_list
+  description: Direct memory list
+  category: memory-read
+- name: kimetsu_brain_memory_top
+  description: Top memories
+  category: memory-read
+- name: kimetsu_brain_memory_search
+  description: Memory search
+  category: memory-read
+- name: kimetsu_brain_memory_proposals
+  description: Review pending proposals
+  category: curation
+- name: kimetsu_brain_memory_accept
+  description: Accept a pending proposal
+  category: curation
+- name: kimetsu_brain_memory_reject
+  description: Reject a pending proposal
+  category: curation
+- name: kimetsu_brain_memory_invalidate
+  description: Retire a memory
+  category: memory-write
+- name: kimetsu_brain_memory_blame
+  description: Per-run citation attribution
+  category: analytics
+- name: kimetsu_brain_memory_conflicts
+  description: List ingest conflicts
+  category: curation
+- name: kimetsu_brain_conflict_resolve
+  description: Settle an ingest conflict
+  category: curation
+- name: kimetsu_brain_prune
+  description: List (or invalidate) net-negative memories
+  category: curation
+- name: kimetsu_brain_model_list
+  description: Inspect available embedding models
+  category: models
+- name: kimetsu_brain_model_set
+  description: Switch the embedding model
+  category: models
+- name: kimetsu_brain_reindex
+  description: Re-embed the brain after a model change
+  category: models
+- name: kimetsu_brain_ingest_repo
+  description: Index repo files + manifests
+  category: ingest
+- name: kimetsu_benchmark_context
+  description: Task-aware playbook
+  category: benchmark
+- name: kimetsu_benchmark_record_outcome
+  description: Outcome recording for the task-aware playbook
+  category: benchmark
+- name: kimetsu_bridge_*
+  description: Skill registry discovery, import, export, sync (a family of tools; individual names not enumerated on
+    the docs page)
+  category: bridge
+- name: kimetsu_skills_search
+  description: Search the cross-harness skill registry
+  category: bridge
+- name: kimetsu_brain_cite
+  description: Record that a memory materially helped
+  category: feedback
+- name: kimetsu_brain_answer
+  description: Grounded, cited answer composed from memory (local model)
+  category: retrieval
+- name: kimetsu_brain_config_show
+  description: Show the effective configuration (named in the configuration docs)
+  category: status
+tool_count_stated: ~28
+tool_count_named: 27
+input_schemas: not captured — require a local tools/list against `kimetsu mcp serve`

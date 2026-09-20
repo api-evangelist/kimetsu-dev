@@ -1,0 +1,158 @@
+generated: '2026-09-19'
+method: searched
+source: 'Registry metadata read 2026-09-19: registry.npmjs.org/kimetsu-ai, /kimetsu-remote, /@kimetsu-ai/sdk, /kimetsu-pi,
+  /@kimetsu-ai/darwin-arm64; crates.io/api/v1/crates/kimetsu-cli, kimetsu-brain, kimetsu-core, kimetsu-agent, kimetsu-chat;
+  pypi.org/pypi/kimetsu/json; api.github.com/repos/RodCor/kimetsu/releases/latest. Install commands verbatim from
+  https://kimetsu.dev/docs/install/ and /docs/remote/. Misses: crates.io kimetsu, kimetsu-ai, kimetsu-remote (crate
+  not published; the remote server is `cargo install kimetsu-remote` from the workspace or npm); npm kimetsu, kimetsu-sdk,
+  @kimetsu-ai/pi.'
+description: 'Everything is first-party and open source (MIT OR Apache-2.0) from GitHub RodCor. The product is a
+  Rust binary distributed three ways — npm wrapper (kimetsu-ai, pulling one @kimetsu-ai/<platform> optionalDependency),
+  cargo (kimetsu-cli plus its workspace crates) and GitHub Release archives — with a separate self-hosted server
+  (kimetsu-remote), two thin client SDKs for Kimetsu Remote''s MCP surface (@kimetsu-ai/sdk on npm, kimetsu on PyPI)
+  and a Pi.dev package (kimetsu-pi). The core binary and the crates were all released together on 2026-09-09 (v2.8.0),
+  ten days before this profile; the two SDKs sit at 0.1.0 (July/August 2026) and wrap the beta remote server.'
+packages:
+- language: rust-binary (npm wrapper)
+  registry: npm
+  name: kimetsu-ai
+  url: https://www.npmjs.com/package/kimetsu-ai
+  install: npm install -g kimetsu-ai
+  official: true
+  version: 2.8.0
+  published: '2026-09-09'
+  first_published: '2026-06-01'
+  license: MIT OR Apache-2.0
+  bin: kimetsu, kimetsu-ai
+  platform_packages:
+  - '@kimetsu-ai/linux-x64'
+  - '@kimetsu-ai/darwin-x64'
+  - '@kimetsu-ai/darwin-arm64'
+  - '@kimetsu-ai/win32-x64'
+  note: Installs the prebuilt binary via optionalDependencies (no postinstall download; works under --ignore-scripts).
+    `kimetsu npm-flavor embeddings` switches to the semantic build. 14 versions since 2026-06-01.
+- language: rust-binary (npm wrapper)
+  registry: npm
+  name: '@kimetsu-ai/darwin-arm64'
+  url: https://www.npmjs.com/package/@kimetsu-ai/darwin-arm64
+  install: (pulled automatically by kimetsu-ai)
+  official: true
+  version: 2.8.0
+  published: '2026-09-09'
+  note: One of four per-platform prebuilt packages; recorded once as representative.
+- language: rust
+  registry: crates.io
+  name: kimetsu-cli
+  url: https://crates.io/crates/kimetsu-cli
+  install: cargo install kimetsu-cli
+  official: true
+  version: 2.8.0
+  published: '2026-09-09'
+  license: MIT OR Apache-2.0
+  features: embeddings, pi, openclaw, tls
+  note: Top-level `kimetsu` binary (chat client, MCP sidecar, bridge, brain admin, doctor). Requires Rust 1.85+ for
+    source builds.
+- language: rust
+  registry: crates.io
+  name: kimetsu-brain
+  url: https://crates.io/crates/kimetsu-brain
+  install: cargo add kimetsu-brain
+  official: true
+  version: 2.8.0
+  published: '2026-09-09'
+  note: Library crate — project + user-scope memory, hybrid retrieval, secret redaction at ingest.
+- language: rust
+  registry: crates.io
+  name: kimetsu-core
+  url: https://crates.io/crates/kimetsu-core
+  install: cargo add kimetsu-core
+  official: true
+  version: 2.8.0
+  published: '2026-09-09'
+  note: Library crate — shared core types.
+- language: rust
+  registry: crates.io
+  name: kimetsu-agent
+  url: https://crates.io/crates/kimetsu-agent
+  install: cargo add kimetsu-agent
+  official: true
+  version: 2.8.0
+  published: '2026-09-09'
+  note: Library crate — transport-neutral agent runtime (providers claude_code, anthropic, openai).
+- language: rust
+  registry: crates.io
+  name: kimetsu-chat
+  url: https://crates.io/crates/kimetsu-chat
+  install: cargo add kimetsu-chat
+  official: true
+  version: 2.8.0
+  published: '2026-09-09'
+  note: Library crate — REPL chat client + MCP sidecar + cross-harness bridge.
+- language: rust-binary (npm wrapper)
+  registry: npm
+  name: kimetsu-remote
+  url: https://www.npmjs.com/package/kimetsu-remote
+  install: npm install -g kimetsu-remote
+  official: true
+  version: 2.8.0
+  published: '2026-09-09'
+  license: MIT OR Apache-2.0
+  bin: kimetsu-remote
+  note: Server-hosted Kimetsu brain over HTTP MCP (beta). Separate from the kimetsu-ai CLI. Not on crates.io as a
+    published crate (crates.io/api/v1/crates/kimetsu-remote 404); the docs' `cargo install kimetsu-remote --features
+    embeddings` therefore builds from the workspace path.
+- language: typescript
+  registry: npm
+  name: '@kimetsu-ai/sdk'
+  url: https://www.npmjs.com/package/@kimetsu-ai/sdk
+  install: npm install @kimetsu-ai/sdk
+  official: true
+  version: 0.1.0
+  published: '2026-08-03'
+  license: MIT OR Apache-2.0
+  requires_node: '>=18'
+  sdk: true
+  note: Typed TypeScript client for Kimetsu Remote's MCP surface; counterpart to the Python SDK. Source npm/kimetsu-sdk
+    in the kimetsu repo.
+- language: python
+  registry: pypi
+  name: kimetsu
+  url: https://pypi.org/project/kimetsu/
+  install: pip install kimetsu
+  official: true
+  version: 0.1.0
+  published: '2026-07-23'
+  license: MIT OR Apache-2.0
+  requires_python: '>=3.9'
+  sdk: true
+  source: https://github.com/RodCor/kimetsu-py
+  note: Typed Python client (sync + async, httpx + pydantic) for the Kimetsu remote brain. Author Rodrigo Cordoba;
+    project_urls point at RodCor/kimetsu as the main project.
+- language: typescript
+  registry: npm
+  name: kimetsu-pi
+  url: https://www.npmjs.com/package/kimetsu-pi
+  install: pi install kimetsu-pi
+  official: true
+  version: 0.1.4
+  published: '2026-09-10'
+  license: MIT OR Apache-2.0
+  source: https://github.com/RodCor/kimetsu-pi
+  note: Kimetsu brain as a Pi.dev package (extension + skill); homepage kimetsu.dev. Install command inferred from
+    the pi-package keyword — the docs' documented route is `kimetsu plugin install pi`.
+- language: rust-binary
+  registry: github-releases
+  name: kimetsu (prebuilt archives)
+  url: https://github.com/RodCor/kimetsu/releases
+  install: Download kimetsu-2.8.0-<target>-{lean|embeddings}.tar.gz / .zip and place kimetsu on PATH
+  official: true
+  version: 2.8.0
+  published: '2026-09-09'
+  targets:
+  - aarch64-apple-darwin (lean, embeddings)
+  - x86_64-apple-darwin (lean)
+  - x86_64-unknown-linux-gnu (lean, embeddings)
+  - x86_64-pc-windows-msvc (lean, embeddings)
+  - kimetsu-remote for aarch64-apple-darwin, x86_64-unknown-linux-gnu, x86_64-pc-windows-msvc
+  note: checksums.txt published alongside; `kimetsu update` pulls from here.
+sdk_count: 2

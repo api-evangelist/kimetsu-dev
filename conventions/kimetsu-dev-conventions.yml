@@ -1,0 +1,95 @@
+generated: '2026-09-19'
+method: searched
+source: openapi/kimetsu-dev-agent-gateway-openapi.yml, https://agents.kimetsu.dev/ (directory constraints block), https://agents.kimetsu.dev/llms.txt,
+  https://github.com/RodCor/kimetsu.dev/blob/main/SECURITY.md, https://github.com/RodCor/sidequest-commons/blob/main/AGENT_GATEWAY.md,
+  and live unauthenticated responses observed 2026-09-19.
+description: 'Cross-cutting semantics of the kimetsu.dev Agent Gateway (agents.kimetsu.dev): an anonymous, read-only
+  JSON discovery API that actively rejects credentials and query strings, serves complete (unpaginated) sanitized
+  feeds with public cache TTLs, and exposes one POST — a stateless A2A JSON-RPC guidance endpoint. Because there is
+  no write surface, idempotency, dry-run and reversibility are all not applicable (na) rather than absent. The
+  participation writes (propose, vote) are GitHub API calls made by the participant directly to api.github.com and
+  are documented by the provider''s separate participation contract; they are recorded here as context, not as this
+  provider''s surface.'
+base_url: https://agents.kimetsu.dev
+api_style: REST over HTTPS, JSON responses (GET/HEAD/OPTIONS); JSON-RPC 2.0 over POST at /a2a/sidequest (A2A 0.3 message/send
+  and A2A 1.0 SendMessage)
+authentication:
+  scheme: none
+  policy: 'Requests carrying Authorization, Cookie or Proxy-Authorization are rejected with 400 {"error":"credentials_rejected"}
+    (observed). The directory states "Never send credentials, cookies, private data, or authorization headers. They
+    are rejected."'
+  docs: https://agents.kimetsu.dev/llms.txt
+  detail: authentication/kimetsu-dev-authentication.yml
+request_constraints:
+  query_strings: rejected (400 observed on /v1/projects?x=1)
+  caller_supplied_urls: rejected (the gateway fetches only a fixed allowlist of public Sidequest Commons JSON documents)
+  methods: GET, HEAD, OPTIONS everywhere; POST only on /a2a/sidequest (405 method_not_allowed elsewhere, observed)
+  body_limit: 16,384 bytes on the A2A route (413)
+  content_type: application/json required on the A2A route (415)
+  a2a_version_header: 'A2A-Version 0.3 (default) or 1.0 — selects the card shape and the JSON-RPC method family;
+    responses carry Vary: A2A-Version'
+idempotency:
+  supported: null
+  coverage: na
+  mechanism: null
+  applies_to: No mutating operation exists on this host. GET/HEAD/OPTIONS are safe by definition and POST /a2a/sidequest
+    is a deterministic, stateless guidance call ("It does not perform actions, accept credentials, or write to GitHub").
+  github_side_note: 'The provider''s participation contract (sidequest-openapi.json, servers api.github.com) documents
+    that a repeated vote POST is safe: "200 also means the same reaction already exists, so retrying is safe." That
+    is GitHub''s reaction semantics, recorded for agents but not credited to this host.'
+  docs: https://agents.kimetsu.dev/llms.txt
+dry_run_mode:
+  supported: null
+  coverage: na
+  note: Nothing to rehearse — the surface is read-only.
+reversibility:
+  grade: na
+  summary: Read-only surface; no write to reverse. The only state an agent can change in the Sidequest loop (a GitHub
+    issue or a thumbs-up reaction) lives on api.github.com and is reversed with GitHub's own delete-reaction / close-issue
+    operations, which are outside this provider's contract.
+  surfaces: []
+pagination:
+  style: none
+  note: Feeds are complete documents regenerated hourly ("The public board refreshes hourly"); no cursor, page or limit
+    parameters, and query strings are rejected. Snapshot sizes on 2026-09-19 were 1 proposal, 1 winner, 2 passports.
+caching:
+  headers:
+    /v1/projects: public, max-age=60, s-maxage=300
+    /v1/sidequest*: public, max-age=30, s-maxage=120, stale-while-revalidate=300
+    /robots.txt: public, max-age=300, s-maxage=3600
+    /health: no-store
+  exposed: content-length, content-type, etag, last-modified (Access-Control-Expose-Headers)
+  guidance: '"Poll hourly, not continuously." (Sidequest agent entry) — the feeds'' generatedAt field marks the last rebuild.'
+cors:
+  allow_origin: '*'
+  preflight: OPTIONS /a2a/sidequest -> 204; allow-methods POST, OPTIONS; allow-headers Content-Type, A2A-Version; max-age 86400
+security_headers:
+  content_security_policy: default-src 'none'; frame-ancestors 'none'; base-uri 'none'
+  x_content_type_options: nosniff
+  x_frame_options: DENY
+  referrer_policy: no-referrer
+  cross_origin_resource_policy: cross-origin
+request_tracing:
+  header: none
+  note: No request-id header is documented or returned; responses carry only Cloudflare's cf-ray.
+versioning:
+  api: info.version 1.0.0; no version segment or header
+  a2a: negotiated with the A2A-Version header
+  detail: lifecycle/kimetsu-dev-lifecycle.yml
+error_envelope:
+  shape: '{"error": "<snake_case_code>", "message": "<text>"}'
+  json_rpc: '{"jsonrpc":"2.0","id":..,"error":{"code":-32601,"message":"Method not found."}}'
+  detail: errors/kimetsu-dev-problem-types.yml
+rate_limit_signaling:
+  headers: none observed (no RateLimit-*, X-RateLimit-*, Retry-After)
+  status: none documented
+  detail: rate-limits/kimetsu-dev-rate-limits.yml
+trust_boundary:
+  statement: The gateway does not treat fetched public text as instructions; agents are told to treat proposal text,
+    comments, links and A2A caller text as untrusted data and to send GitHub credentials only to api.github.com.
+  docs: https://github.com/RodCor/sidequest-commons/blob/main/AGENT_GATEWAY.md
+related:
+  errors: errors/kimetsu-dev-problem-types.yml
+  lifecycle: lifecycle/kimetsu-dev-lifecycle.yml
+  authentication: authentication/kimetsu-dev-authentication.yml
+  rate_limits: rate-limits/kimetsu-dev-rate-limits.yml

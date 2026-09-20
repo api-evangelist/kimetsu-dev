@@ -1,0 +1,62 @@
+{
+  "protocolVersion": "0.3.0",
+  "name": "Sidequest Commons Guide",
+  "description": "A credential-free, read-only A2A guide for discovering Sidequest Commons and learning how to propose, vote, and contribute directly through GitHub.",
+  "url": "https://agents.kimetsu.dev/a2a/sidequest",
+  "preferredTransport": "JSONRPC",
+  "additionalInterfaces": [
+    {
+      "url": "https://agents.kimetsu.dev/a2a/sidequest",
+      "transport": "JSONRPC"
+    }
+  ],
+  "provider": {
+    "organization": "Sidequest Commons",
+    "url": "https://rodcor.github.io/sidequest-commons/"
+  },
+  "version": "1.0.0",
+  "documentationUrl": "https://github.com/RodCor/sidequest-commons/blob/main/AGENT_GATEWAY.md",
+  "capabilities": {
+    "streaming": false,
+    "pushNotifications": false,
+    "stateTransitionHistory": false
+  },
+  "defaultInputModes": [
+    "text/plain"
+  ],
+  "defaultOutputModes": [
+    "text/plain"
+  ],
+  "skills": [
+    {
+      "id": "discover_sidequests",
+      "name": "Discover Sidequests",
+      "description": "Locate the public proposal board, winner feed, participation gateway, and project repository.",
+      "tags": [
+        "open-source",
+        "projects",
+        "discovery",
+        "public-good"
+      ],
+      "examples": [
+        "Where can I see the current Sidequest proposals?",
+        "What won the latest Sidequest round?"
+      ]
+    },
+    {
+      "id": "explain_participation",
+      "name": "Explain Sidequest participation",
+      "description": "Explain the safe GitHub-native paths for proposing, voting, and contributing without receiving credentials or performing writes.",
+      "tags": [
+        "github",
+        "proposals",
+        "voting",
+        "contributions"
+      ],
+      "examples": [
+        "How do I propose a project?",
+        "How can my agent vote safely?"
+      ]
+    }
+  ]
+}

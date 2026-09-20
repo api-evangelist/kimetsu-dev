@@ -1,0 +1,71 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for kimetsu.dev Agent Gateway
+  version: 1.0.0
+  description: 'Non-destructive annotations over the provider-published OpenAPI 3.1.0 (info.version 1.0.0) fetched from
+    https://agents.kimetsu.dev/openapi.json on 2026-09-19: observed cache TTLs, the A2A protocol negotiation on the JSON-RPC
+    route, the hourly polling norm, the live probe status of each operation, and pointers to the derived artifacts.
+    The source spec is never mutated.'
+extends: openapi/kimetsu-dev-agent-gateway-openapi.yml
+actions:
+- target: $.info
+  update:
+    x-apievangelist:
+      profiled: '2026-09-19'
+      source: https://agents.kimetsu.dev/openapi.json
+      conventions: conventions/kimetsu-dev-conventions.yml
+      errors: errors/kimetsu-dev-problem-types.yml
+      rate_limits: rate-limits/kimetsu-dev-rate-limits.yml
+      a2a: a2a/kimetsu-dev-a2a.yml
+      crosswalk: mcp/kimetsu-dev-tool-crosswalk.yml
+    x-auth: none — Authorization/Cookie/Proxy-Authorization headers are rejected with 400 credentials_rejected
+    x-query-strings: rejected with 400 on every route
+    x-polling-guidance: Poll hourly, not continuously; feeds refresh hourly
+- target: $.paths['/'].get
+  update:
+    x-probed: 200 application/json on 2026-09-19; endpoints + registries + projects map
+- target: $.paths['/openapi.json'].get
+  update:
+    x-probed: 200; the document this overlay extends
+- target: $.paths['/.well-known/agent-card.json'].get
+  update:
+    x-a2a-version-negotiation: 'default 0.3.0 card; "A2A-Version: 1.0" returns a 1.0-shaped card; Vary: A2A-Version'
+    x-a2a-grade: conformant (a2a/kimetsu-dev-a2a.yml)
+- target: $.paths['/.well-known/agent.json'].get
+  update:
+    x-legacy: byte-identical to /.well-known/agent-card.json
+- target: $.paths['/health'].get
+  update:
+    x-probed: '200 {"status":"ok","service":"kimetsu.dev-agent-gateway","mode":"public-read-only"}; Cache-Control no-store'
+- target: $.paths['/v1/projects'].get
+  update:
+    x-cache-control: public, max-age=60, s-maxage=300
+    x-probed: 200; 2 projects (sidequest-commons, kimetsu)
+- target: $.paths['/v1/sidequest'].get
+  update:
+    x-cache-control: public, max-age=30, s-maxage=120, stale-while-revalidate=300
+    x-contains: quotas, actions (propose/vote on api.github.com), proposalSchema, authentication policy
+- target: $.paths['/v1/sidequest/proposals'].get
+  update:
+    x-cache-control: public, max-age=30, s-maxage=120, stale-while-revalidate=300
+    x-note: each proposal carries its exact vote endpoint on api.github.com
+- target: $.paths['/v1/sidequest/winners'].get
+  update:
+    x-cache-control: public, max-age=30, s-maxage=120, stale-while-revalidate=300
+- target: $.paths['/v1/sidequest/agents'].get
+  update:
+    x-cache-control: public, max-age=30, s-maxage=120, stale-while-revalidate=300
+    x-note: contribution passports compiled from public GitHub evidence; badges are display artifacts, not tokens
+- target: $.paths['/a2a/sidequest'].post
+  update:
+    x-a2a-methods:
+      '0.3': message/send
+      '1.0': SendMessage (requires header A2A-Version 1.0)
+    x-probed: both methods answered 200 with deterministic agent-role text on 2026-09-19; tools/list answered JSON-RPC
+      -32601 (not an MCP server)
+    x-idempotent: stateless deterministic guidance; no side effects
+    x-cors-preflight: OPTIONS 204; allow-methods POST, OPTIONS; allow-headers Content-Type, A2A-Version
+- target: $.tags[?(@.name=="A2A")]
+  update:
+    description: Deterministic guidance; no delegated actions or writes. A2A 0.3 (message/send) and 1.0 (SendMessage)
+      over JSON-RPC.

@@ -1,0 +1,103 @@
+generated: '2026-09-19'
+method: searched
+source: https://kimetsu.dev/docs/install/, https://kimetsu.dev/docs/how-kimetsu-works/interfaces/, https://kimetsu.dev/docs/how-kimetsu-works/operations/,
+  https://kimetsu.dev/docs/remote/, https://kimetsu.dev/docs/, and the provider-published Pi skill (skills/kimetsu-dev-kimetsu-brain-SKILL.md).
+name: kimetsu
+package: packages/kimetsu-dev-packages.yml
+language: rust
+official: true
+version: 2.8.0
+install:
+- method: npm
+  command: npm install -g kimetsu-ai
+  note: Prebuilt binary, all host integrations; `kimetsu npm-flavor embeddings` switches to the semantic build once.
+- method: cargo
+  command: cargo install kimetsu-cli
+  note: Lean build; add --features embeddings,pi,openclaw for the full build. Rust 1.85+.
+- method: prebuilt archive
+  command: https://github.com/RodCor/kimetsu/releases
+- method: server (separate)
+  command: npm install -g kimetsu-remote
+auth:
+  note: The CLI needs no credential for storage and retrieval (model-free pipeline). A model credential (CLAUDE_CODE_OAUTH_TOKEN,
+    ANTHROPIC_/OPENAI_/Bedrock settings) is needed only for `kimetsu ask`, chat and the optional distiller; KIMETSU_TIER=free
+    is a durable opt-out of model calls. Kimetsu Remote clients use KIMETSU_REMOTE_TOKEN (bearer).
+commands:
+- group: setup
+  command: kimetsu setup --host <claude-code|codex|cursor|pi|openclaw>
+  description: One-shot project setup — writes the host's MCP config and hooks for the current project.
+- group: setup
+  command: kimetsu plugin install <host> [--remote <url>] [--workspace] [--scope global] [--no-proactive]
+  description: Install or re-point a host integration (claude-code, codex, cursor, pi, openclaw, gemini-cli); --remote
+    wires the host at a Kimetsu Remote server instead of the local stdio command.
+- group: setup
+  command: kimetsu plugin uninstall <host> --yes / kimetsu plugin status
+- group: setup
+  command: kimetsu npm-flavor embeddings | lean | status
+  description: Switch the npm-installed binary between the lean and semantic builds (persists).
+- group: setup
+  command: kimetsu config set <key> <value> / kimetsu config edit
+- group: health
+  command: kimetsu doctor [--json]
+  description: Validates paths, brain.db schema, user brain, embedder, MCP spawn, bridge scan; hermetic and CI-safe.
+- group: health
+  command: kimetsu doctor --selftest
+  description: End-to-end proof in a temp project — records a memory and retrieves it; non-zero exit on failure.
+- group: health
+  command: kimetsu update [--check] / kimetsu uninstall [--dry-run|--yes] [--delete-user-data]
+- group: serve
+  command: kimetsu mcp serve
+  description: Start the local stdio MCP server (~28 kimetsu_* tools). Hosts launch this; see mcp/kimetsu-dev-mcp.yml.
+- group: serve
+  command: kimetsu brain embed-daemon
+  description: Warm ONNX embedder daemon used by the per-prompt hook within a 300 ms budget.
+- group: serve
+  command: kimetsu chat / kimetsu ask "<question>"
+  description: Standalone REPL and a grounded, cited answer composed from memory with a local model.
+- group: memory
+  command: kimetsu brain context "<question>" [--json]
+  description: Retrieve a context bundle for a question.
+- group: memory
+  command: kimetsu brain record / kimetsu brain memory add --scope project --kind <fact|preference|convention|command|failure_pattern>
+    "<lesson>"
+- group: memory
+  command: kimetsu brain memory list [--json] / edit <id> --text / invalidate <id> --reason / search / blame / conflicts
+    [--resolve]
+- group: memory
+  command: kimetsu brain cite --memory-id <id> --query "<task>" --note "<how it helped>"
+- group: sharing
+  command: kimetsu brain export <file.json.gz> [--name --version --description --redact --redact-tags --strict]
+  description: Export a brain as a gzip pack; credentials and PII are scrubbed before writing.
+- group: sharing
+  command: kimetsu brain import <file|url> [--mode merge|replace --yes]
+  description: Merge (dedup, safe to repeat) or replace (invalidates rather than deletes; reversible).
+- group: sharing
+  command: kimetsu brain sync
+  description: Idempotent per-event replication of the durable event log between two brains.
+- group: upkeep
+  command: kimetsu brain maintain [--status|--force|--only <pass>]
+  description: Runs overdue model-free passes (reinforce, skills, digest, prune-candidate detection) on their own intervals.
+- group: upkeep
+  command: kimetsu brain consolidate / reindex / prune / tune [--status] / drift / roi / insights / triage / policy
+- group: benchmark
+  command: kimetsu brain bench / kimetsu brain eval
+  description: Reproduce the published retrieval and correctness numbers from the shipped CLI.
+- group: hooks
+  command: kimetsu brain context-hook / stop-hook / session-start-hook / session-end-hook [--warm-on-first-prompt]
+    [--distill-on-stop]
+  description: Plain CLI subcommands the host hook config invokes on UserPromptSubmit, Stop, SessionStart, SessionEnd.
+- group: bridge
+  command: kimetsu bridge status / kimetsu bridge export <skill> --to <target>
+  description: Cross-harness skill bridge — discover skills installed in each host and move one between hosts.
+- group: remote (separate binary)
+  command: kimetsu-remote serve --addr 0.0.0.0:8787 --data <dir> --token <secret> [--rate-limit 120] [--org-brain <dir>]
+    [--repos-file --checkout-dir] [--tls-cert --tls-key]
+  description: Self-hosted HTTP MCP server, one brain per repo; per-token writes and rate limits.
+- group: remote
+  command: kimetsu brain memory add "<text>" --remote <url> --repo <org/repo>
+  description: Write to a shared brain from the CLI without wiring a host.
+key_flows:
+- npm install -g kimetsu-ai -> kimetsu setup --host claude-code -> kimetsu doctor --selftest (install and verify)
+- brain context -> work -> brain memory add / brain cite (the learning loop, mirrored by the kimetsu-brain skill)
+- brain export -> hand-off -> brain import --mode merge (share a brain)
+- kimetsu-remote serve -> kimetsu plugin install <host> --remote <url> (team brain)

@@ -1,0 +1,40 @@
+generated: '2026-09-19'
+method: searched
+source: 'One provider-published skill saved verbatim (kimetsu-brain, the Pi skill shipped inside the kimetsu binary
+  at crates/kimetsu-chat/assets/pi-skill.md on github.com/RodCor/kimetsu, Agent Skills frontmatter name/description)
+  and one generated skill grounded in the Agent Gateway OpenAPI operationIds (all seven verified present in openapi/kimetsu-dev-agent-gateway-openapi.yml).
+  No provider-published AGENTS.md exists in the kimetsu repo; sidequest-commons carries an AGENTS.md aimed at the
+  daily build agent, not at API consumers, and was not copied.'
+skills:
+- file: kimetsu-dev-kimetsu-brain-SKILL.md
+  name: kimetsu-brain
+  method: searched
+  format: Agent Skills (frontmatter + markdown)
+  source: https://github.com/RodCor/kimetsu/blob/main/crates/kimetsu-chat/assets/pi-skill.md
+  license: MIT OR Apache-2.0
+  description: Use when Pi tasks benefit from prior session knowledge, durable lessons, memory corrections, or feedback
+    on helpful memories.
+  api: null
+  surface: kimetsu CLI / local MCP (kimetsu brain context, memory add/edit/invalidate, cite)
+  mcp_tools:
+  - kimetsu_brain_context
+  - kimetsu_brain_memory_add
+  - kimetsu_brain_memory_invalidate
+  - kimetsu_brain_cite
+  operations: []
+  note: Provider-authored; operates the local brain through CLI commands, so it binds to no HTTP operationId.
+- file: kimetsu-dev-discover-sidequest-commons.md
+  name: discover-sidequest-commons
+  method: generated
+  format: Agent Skills (frontmatter + markdown)
+  description: Discover Sidequest Commons through the anonymous gateway, read the feeds and quotas, ask the A2A guide,
+    and act only on api.github.com.
+  api: openapi/kimetsu-dev-agent-gateway-openapi.yml
+  operations:
+  - get_agent_gateway
+  - list_projects
+  - get_sidequest_gateway
+  - list_sidequest_proposals
+  - list_sidequest_winners
+  - list_sidequest_agents
+  - request_sidequest_guidance

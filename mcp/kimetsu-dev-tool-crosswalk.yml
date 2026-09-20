@@ -1,0 +1,88 @@
+generated: '2026-09-19'
+method: derived
+source: Derived by comparing the documented Kimetsu MCP tool list (mcp/kimetsu-dev-mcp.yml, from https://kimetsu.dev/docs/how-kimetsu-works/interfaces/)
+  with the provider-published Agent Gateway OpenAPI 3.1.0 (openapi/kimetsu-dev-agent-gateway-openapi.yml, 15 operations).
+purpose: 'Record, honestly, that this provider''s MCP surface and its REST surface are two different products with
+  zero overlap: the MCP tools operate a local SQLite memory brain on the developer''s machine; the REST operations
+  are anonymous discovery reads over public Sidequest Commons feeds on agents.kimetsu.dev. No tool is backed by
+  a gateway operation and no gateway operation has a tool, so every row lands in mcp_only or rest_only. The crosswalk
+  exists so the divergence is data rather than an absence.'
+surfaces:
+  rest_openapi: openapi/kimetsu-dev-agent-gateway-openapi.yml
+  rest_original: openapi/_original/kimetsu-dev-agent-gateway-openapi.json
+  rest_base: https://agents.kimetsu.dev
+  mcp: local stdio (`kimetsu mcp serve`); no hosted endpoint
+  mcp_gated: false
+  mcp_introspected: false
+  mcp_note: Not gated by auth, but not reachable over the network; tools/list requires running the binary locally,
+    which this pass did not do. Tool names come from the provider's own docs.
+  a2a: https://agents.kimetsu.dev/a2a/sidequest (JSON-RPC; message/send and SendMessage; not MCP — tools/list answered
+    -32601)
+  graphql: null
+crosswalk: []
+mcp_only:
+- tool: kimetsu_brain_context
+  reason: Local brain retrieval over the project's brain.db; no HTTP operation exists.
+- tool: kimetsu_brain_record
+  reason: Local memory write.
+- tool: kimetsu_brain_status
+  reason: Local brain health; the gateway's GET /health (get_service_health) reports the gateway service, not a brain.
+- tool: kimetsu_brain_insights
+  reason: Local analytics.
+- tool: kimetsu_brain_memory_add / _list / _top / _search
+  reason: Local memory CRUD.
+- tool: kimetsu_brain_memory_proposals / _accept / _reject
+  reason: Local curation.
+- tool: kimetsu_brain_memory_invalidate
+  reason: Local memory write.
+- tool: kimetsu_brain_memory_blame
+  reason: Local analytics.
+- tool: kimetsu_brain_memory_conflicts / kimetsu_brain_conflict_resolve
+  reason: Local curation.
+- tool: kimetsu_brain_prune
+  reason: Local curation.
+- tool: kimetsu_brain_model_list / _set / kimetsu_brain_reindex
+  reason: Local embedding-model management.
+- tool: kimetsu_brain_ingest_repo
+  reason: Local repository indexing.
+- tool: kimetsu_benchmark_context / _record_outcome
+  reason: Local benchmark playbook.
+- tool: kimetsu_bridge_* / kimetsu_skills_search
+  reason: Local cross-harness skill registry.
+- tool: kimetsu_brain_cite
+  reason: Local feedback write.
+- tool: kimetsu_brain_answer
+  reason: Local model-composed answer.
+- tool: kimetsu_brain_config_show
+  reason: Local configuration read.
+rest_only:
+- capability: discovery documents
+  operations:
+  - get_agent_gateway
+  - get_agent_gateway_alias
+  - get_llm_discovery_guide
+  - get_crawler_policy
+  - get_openapi_document
+  - get_well_known_directory
+  - get_a2a_agent_card
+  - get_legacy_a2a_agent_card
+  - get_service_health
+- capability: project directory
+  operations:
+  - list_projects
+- capability: Sidequest Commons public feeds
+  operations:
+  - get_sidequest_gateway
+  - list_sidequest_proposals
+  - list_sidequest_winners
+  - list_sidequest_agents
+- capability: A2A guidance (JSON-RPC over POST)
+  operations:
+  - request_sidequest_guidance
+coverage:
+  tools_named: 27
+  tools_bound: 0
+  tools_bound_high: 0
+  mcp_only: 27
+  rest_ops_total: 15
+  rest_ops_with_tool: 0

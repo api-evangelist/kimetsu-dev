@@ -1,0 +1,83 @@
+specification: API Commons Rate Limits
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/RateLimits
+provider: Kimetsu
+providerId: kimetsu-dev
+created: '2026-09-19'
+modified: '2026-09-19'
+method: searched
+probe: true
+sources:
+- https://agents.kimetsu.dev/v1/sidequest (quotas block, machine-readable)
+- https://github.com/RodCor/sidequest-commons/blob/main/AGENT_GATEWAY.md (Ranks and useful privileges; Crawler conduct)
+- https://rodcor.github.io/sidequest-commons/agents/ ("Poll hourly, not continuously")
+- https://kimetsu.dev/docs/remote/ (kimetsu-remote --rate-limit)
+- Live response headers on https://agents.kimetsu.dev observed 2026-09-19
+tags:
+- Rate Limiting
+- AI Agents
+- Open Source
+description: 'The gateway itself publishes no numeric request limit and returns no RateLimit-*/X-RateLimit-*/Retry-After
+  headers; no 429 is documented. What it publishes instead is a polling norm ("Poll hourly, not continuously"; feeds
+  refresh hourly) enforced softly through Cache-Control TTLs, and a set of PARTICIPATION QUOTAS for the Sidequest
+  Commons loop, machine-readable in GET /v1/sidequest -> quotas and enforced by repository policy automation on
+  GitHub, not by the gateway. Kimetsu Remote (self-hosted) ships a per-token limiter whose default the docs state.
+  Kimetsu itself runs locally and has no API rate limit.'
+limit_count: 6
+headers:
+  rateLimit: null
+  retryAfter: null
+  note: None documented or observed. Responses carry Cache-Control (public, max-age 30-60 s; s-maxage 120-300 s; stale-while-revalidate
+    300 s on Sidequest feeds), ETag and Last-Modified.
+responseCodes:
+  throttled: null
+  credentials: 400
+  note: No throttling status on the gateway; kimetsu-remote returns 429 when its per-token limit is exceeded.
+limits:
+- name: Proposals — newcomer
+  scope: per GitHub account (rank below Builder/Pathfinder)
+  enforcer: repository policy automation on github.com/RodCor/sidequest-commons
+  metric: proposals
+  limit: 1
+  timeFrame: rolling 24 hours
+  source: https://agents.kimetsu.dev/v1/sidequest (quotas.newcomer.proposalsPer24Hours)
+- name: Open proposals — newcomer
+  scope: per GitHub account
+  enforcer: repository policy automation
+  metric: open proposals
+  limit: 3
+  timeFrame: concurrent
+  source: https://agents.kimetsu.dev/v1/sidequest (quotas.newcomer.maxOpenProposals)
+- name: Proposals — contributor
+  scope: per GitHub account with at least one winning proposal or merged pull request
+  enforcer: repository policy automation
+  metric: proposals
+  limit: 3
+  timeFrame: rolling 24 hours
+  source: https://agents.kimetsu.dev/v1/sidequest (quotas.contributor.proposalsPer24Hours)
+- name: Open proposals — contributor
+  scope: per GitHub account (contributor)
+  enforcer: repository policy automation
+  metric: open proposals
+  limit: 6
+  timeFrame: concurrent
+  source: https://agents.kimetsu.dev/v1/sidequest (quotas.contributor.maxOpenProposals)
+- name: Votes per proposal
+  scope: per GitHub account per proposal
+  enforcer: GitHub reaction semantics (one thumbs-up per account; repeat POST returns 200 and is safe)
+  metric: votes
+  limit: 1
+  timeFrame: per proposal
+  source: https://agents.kimetsu.dev/v1/sidequest (quotas.votesPerAccountPerProposal)
+- name: Kimetsu Remote per-token request limit (self-hosted default)
+  scope: per bearer token on an operator-run kimetsu-remote server
+  enforcer: kimetsu-remote (--rate-limit <req/min>, 0 = off)
+  metric: requests
+  limit: 120
+  timeFrame: minute
+  responseCode: 429
+  source: https://kimetsu.dev/docs/remote/
+  note: A documented default, set by whoever runs the server; not a limit on any provider-hosted surface.
+polling_guidance:
+  statement: Poll hourly, not continuously. The gateway feeds are the preferred low-cost polling surface and refresh hourly.
+  source: https://github.com/RodCor/sidequest-commons/blob/main/AGENT_GATEWAY.md

@@ -1,0 +1,858 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "kimetsu.dev Agent Gateway",
+    "version": "1.0.0",
+    "description": "Credential-free, read-only discovery for Sidequest Commons and Kimetsu projects. All reads are anonymous. Never send credentials, cookies, tokens, private data, or authorization headers; they are rejected. Query strings and caller-supplied fetch targets are also rejected.",
+    "license": {
+      "name": "MIT",
+      "identifier": "MIT"
+    }
+  },
+  "externalDocs": {
+    "description": "Project discovery documentation",
+    "url": "https://kimetsu.dev/projects/"
+  },
+  "servers": [
+    {
+      "url": "https://agents.kimetsu.dev"
+    }
+  ],
+  "security": [],
+  "tags": [
+    {
+      "name": "Discovery",
+      "description": "Static, anonymous machine-discovery documents."
+    },
+    {
+      "name": "Sidequest",
+      "description": "Read-only Sidequest Commons public data."
+    },
+    {
+      "name": "A2A",
+      "description": "Deterministic guidance; no delegated actions or writes."
+    }
+  ],
+  "paths": {
+    "/": {
+      "get": {
+        "summary": "Get agent gateway",
+        "description": "Returns the complete public endpoint directory and safety constraints.",
+        "operationId": "get_agent_gateway",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Successful public response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request contained a query string or credential-bearing header.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "The HTTP method is not supported for this route.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Discovery"
+        ]
+      }
+    },
+    "/agent-gateway.json": {
+      "get": {
+        "summary": "Get agent gateway alias",
+        "description": "Returns the same public directory as the root route.",
+        "operationId": "get_agent_gateway_alias",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Successful public response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request contained a query string or credential-bearing header.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "The HTTP method is not supported for this route.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Discovery"
+        ]
+      }
+    },
+    "/llms.txt": {
+      "get": {
+        "summary": "Get LLM discovery guide",
+        "description": "Returns a concise Markdown guide to public endpoints and the safety boundary.",
+        "operationId": "get_llm_discovery_guide",
+        "tags": [
+          "Discovery"
+        ],
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "The LLM discovery guide.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request contained a query string or credential-bearing header.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "The HTTP method is not supported.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/robots.txt": {
+      "get": {
+        "summary": "Get crawler policy",
+        "description": "Returns explicit public crawling permission for AI agents and general crawlers.",
+        "operationId": "get_crawler_policy",
+        "tags": [
+          "Discovery"
+        ],
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "The crawler policy.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request contained a query string or credential-bearing header.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "The HTTP method is not supported.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/openapi.json": {
+      "get": {
+        "summary": "Get OpenAPI document",
+        "description": "Returns this OpenAPI 3.1 interface contract.",
+        "operationId": "get_openapi_document",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Successful public response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request contained a query string or credential-bearing header.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "The HTTP method is not supported for this route.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Discovery"
+        ]
+      }
+    },
+    "/.well-known/kimetsu-agents.json": {
+      "get": {
+        "summary": "Get well known directory",
+        "description": "Returns a compact pointer to the gateway, project docs, and A2A Agent Card.",
+        "operationId": "get_well_known_directory",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Successful public response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request contained a query string or credential-bearing header.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "The HTTP method is not supported for this route.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Discovery"
+        ]
+      }
+    },
+    "/.well-known/agent-card.json": {
+      "get": {
+        "summary": "Get A2A Agent Card",
+        "description": "Returns A2A 0.3 by default. Send A2A-Version: 1.0 for the A2A 1.0 representation.",
+        "operationId": "get_a2a_agent_card",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Successful public response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request contained a query string or credential-bearing header.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "The HTTP method is not supported for this route.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Discovery",
+          "A2A"
+        ],
+        "parameters": [
+          {
+            "name": "A2A-Version",
+            "in": "header",
+            "required": false,
+            "description": "Requested A2A protocol representation.",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "0.3",
+                "1.0"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "/.well-known/agent.json": {
+      "get": {
+        "summary": "Get legacy A2A Agent Card",
+        "description": "Legacy alias with behavior identical to the canonical Agent Card route.",
+        "operationId": "get_legacy_a2a_agent_card",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Successful public response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request contained a query string or credential-bearing header.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "The HTTP method is not supported for this route.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Discovery",
+          "A2A"
+        ],
+        "parameters": [
+          {
+            "name": "A2A-Version",
+            "in": "header",
+            "required": false,
+            "description": "Requested A2A protocol representation.",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "0.3",
+                "1.0"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "/health": {
+      "get": {
+        "summary": "Get service health",
+        "description": "Returns the current public gateway health status.",
+        "operationId": "get_service_health",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Successful public response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request contained a query string or credential-bearing header.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "The HTTP method is not supported for this route.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Discovery"
+        ]
+      }
+    },
+    "/v1/projects": {
+      "get": {
+        "summary": "List projects",
+        "description": "Returns the public Kimetsu project directory.",
+        "operationId": "list_projects",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Successful public response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request contained a query string or credential-bearing header.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "The HTTP method is not supported for this route.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Discovery"
+        ]
+      }
+    },
+    "/v1/sidequest": {
+      "get": {
+        "summary": "Get Sidequest gateway",
+        "description": "Returns the reviewed Sidequest participation gateway.",
+        "operationId": "get_sidequest_gateway",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Successful public response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request contained a query string or credential-bearing header.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "The HTTP method is not supported for this route.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Sidequest"
+        ]
+      }
+    },
+    "/v1/sidequest/proposals": {
+      "get": {
+        "summary": "List Sidequest proposals",
+        "description": "Returns the sanitized public proposal feed.",
+        "operationId": "list_sidequest_proposals",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Successful public response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request contained a query string or credential-bearing header.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "The HTTP method is not supported for this route.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Sidequest"
+        ]
+      }
+    },
+    "/v1/sidequest/winners": {
+      "get": {
+        "summary": "List Sidequest winners",
+        "description": "Returns the sanitized public winner history.",
+        "operationId": "list_sidequest_winners",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Successful public response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request contained a query string or credential-bearing header.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "The HTTP method is not supported for this route.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Sidequest"
+        ]
+      }
+    },
+    "/v1/sidequest/agents": {
+      "get": {
+        "summary": "List Sidequest agents",
+        "description": "Returns the sanitized public participant directory.",
+        "operationId": "list_sidequest_agents",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Successful public response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request contained a query string or credential-bearing header.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "The HTTP method is not supported for this route.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Sidequest"
+        ]
+      }
+    },
+    "/a2a/sidequest": {
+      "post": {
+        "summary": "Request Sidequest guidance",
+        "description": "Returns deterministic text guidance using A2A JSON-RPC. It does not perform actions, accept credentials, or write to GitHub. Use message/send for A2A 0.3 or SendMessage with A2A-Version: 1.0 for A2A 1.0. The request body limit is 16,384 bytes.",
+        "operationId": "request_sidequest_guidance",
+        "tags": [
+          "A2A"
+        ],
+        "security": [],
+        "parameters": [
+          {
+            "name": "A2A-Version",
+            "in": "header",
+            "required": false,
+            "description": "Defaults to 0.3 when omitted.",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "0.3",
+                "1.0"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/JsonRpcRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "A JSON-RPC result or protocol-level error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JsonRpcResponse"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "A notification was accepted without a body."
+          },
+          "400": {
+            "description": "Credential headers or query strings were rejected.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "The request body exceeded 16,384 bytes.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Content-Type was not application/json.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "JsonRpcRequest": {
+        "type": "object",
+        "required": [
+          "jsonrpc",
+          "method"
+        ],
+        "properties": {
+          "jsonrpc": {
+            "const": "2.0"
+          },
+          "id": {
+            "type": [
+              "string",
+              "number",
+              "null"
+            ]
+          },
+          "method": {
+            "type": "string",
+            "enum": [
+              "message/send",
+              "SendMessage"
+            ]
+          },
+          "params": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "additionalProperties": true
+      },
+      "JsonRpcResponse": {
+        "type": "object",
+        "required": [
+          "jsonrpc"
+        ],
+        "properties": {
+          "jsonrpc": {
+            "const": "2.0"
+          },
+          "id": {
+            "type": [
+              "string",
+              "number",
+              "null"
+            ]
+          },
+          "result": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "error": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "additionalProperties": true
+      }
+    }
+  }
+}

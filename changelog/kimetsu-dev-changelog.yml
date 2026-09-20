@@ -1,0 +1,87 @@
+generated: '2026-09-19'
+method: searched
+source: https://kimetsu.dev/docs/changelog/
+sources:
+- https://kimetsu.dev/docs/changelog/
+- https://github.com/RodCor/kimetsu/blob/main/CHANGELOG.md
+- https://registry.npmjs.org/kimetsu-ai (registry release timestamps for versions the changelog page does not date)
+- https://api.github.com/repos/RodCor/kimetsu/releases/latest
+description: 'Kimetsu keeps a Keep a Changelog 1.1.0 file at the repo root, mirrored at /docs/changelog/, with SemVer
+  2.0.0 versions: "From v1.0.0 onward the project follows SemVer normally: patch releases are bug-fix-only, minor
+  releases are backward-compatible additions, and breaking changes require a major bump." Entries are titled and grouped
+  Added / Fixed / Security with measured benchmark deltas. Only v2.8.0 carries an explicit release date on the page;
+  earlier dates below are the npm registry timestamps of the matching kimetsu-ai version. The Agent Gateway OpenAPI
+  is a separate surface at info.version 1.0.0 with no changelog of its own.'
+docs: https://kimetsu.dev/docs/changelog/
+versioning:
+  scheme: semver
+  format: Keep a Changelog 1.1.0
+  current: 2.8.0
+  current_released: '2026-09-09'
+  detail: lifecycle/kimetsu-dev-lifecycle.yml
+entries:
+- version: 2.8.0
+  date: '2026-09-09'
+  title: Durable memory and scoped answerability
+  latest: true
+  breaking: []
+  additions:
+  - Opt-in broker.explicit_fact_guard for scoped configuration evidence, partial answers and conflicting values; schema
+    15 fact projection bound to source events
+  - Reproducible paired answerability evaluation (24/27 hits retained, unwanted injections 15/18 -> 3/18)
+  - Configurable reranker cutoff, optional pinned multilingual reranker, shared ONNX inference thread control
+  fixes:
+  - Durable corrections and cross-writer ANN refresh; atomic replay and merged sync imports
+  - Remote context honors an absent server reranker
+  - Release notes extraction of titled changelog headings
+  security:
+  - Transitive h2 0.4.14 -> 0.4.16 (RUSTSEC-2026-0258)
+  - Reject Windows path aliases and redirected repository roots; validate brain state paths
+  - HTTPS-only, no-redirect signed Bedrock requests; region label and model-id validation
+  - Replace yanked der 0.8.0 with 0.8.2
+  notes: Existing brains upgrade to schema 15 when opened; 1,500 workspace tests passed.
+- version: 2.7.0
+  date: '2026-08-14'
+  date_source: npm registry timestamp
+  title: Retrieval that knows when to stay silent
+  breaking: []
+  additions:
+  - Absolute-evidence abstention for new brains (per-embedder auto floor on raw cosine; existing configs opt in)
+  - Cross-encoder arbitration for borderline bundles, shared by CLI, MCP server and warm embed daemon
+  highlights:
+  - Comprehensive BrainBench 91.3% -> 92.4% over 264 scenarios; importance 92.1% -> 97.4%; retrieval 56.6% -> 97.0%
+  - Update stream resolves the newer fact over its cited incumbent in 33/33 applicable cases
+- version: 2.6.1
+  date: '2026-08-06'
+  date_source: npm registry timestamp
+- version: 2.6.0
+  date: '2026-08-03'
+  date_source: npm registry timestamp
+  notes: Same day @kimetsu-ai/sdk 0.1.0 (TypeScript client for Kimetsu Remote) first appeared on npm.
+- version: 2.5.3
+  date: '2026-07-14'
+  date_source: npm registry timestamp
+- version: 2.5.2
+  date: '2026-07-06'
+  date_source: npm registry timestamp
+- version: 2.5.0
+  date: '2026-07-03'
+  date_source: npm registry timestamp
+- version: 2.0.0
+  date: '2026-06-22'
+  date_source: npm registry timestamp
+  breaking:
+  - Major bump (details in the live changelog; not transcribed here)
+- version: 1.5.1
+  date: '2026-06-12'
+  date_source: npm registry timestamp
+- version: 1.5.0
+  date: '2026-06-12'
+  date_source: npm registry timestamp
+- version: 1.0.0
+  date: '2026-06-10'
+  date_source: npm registry timestamp
+  notes: SemVer commitment begins here per the changelog preamble.
+cadence:
+  releases_last_90_days: 8
+  first_npm_release: '2026-06-01'

@@ -1,0 +1,50 @@
+generated: '2026-09-19'
+method: searched
+source: openapi/kimetsu-dev-agent-gateway-openapi.yml (no securitySchemes; every operation carries security []), https://agents.kimetsu.dev/
+  (authentication block), https://agents.kimetsu.dev/llms.txt (Safety boundary), https://github.com/RodCor/kimetsu.dev/blob/main/SECURITY.md,
+  https://kimetsu.dev/docs/remote/ (Kimetsu Remote bearer tokens), and a live probe on 2026-09-19.
+docs: https://agents.kimetsu.dev/llms.txt
+description: 'The Agent Gateway is anonymous by contract and by enforcement: the OpenAPI declares no securitySchemes
+  and an empty security[] on every operation, the directory says "Never send credentials, cookies, private data,
+  or authorization headers. They are rejected", and a GET carrying "Authorization: Bearer test" was answered 400
+  {"error":"credentials_rejected"}. derive-authentication.py therefore produced no profile (0 schemes); this file
+  records the observed policy instead. The only authenticated surface in the product family is the self-hosted Kimetsu
+  Remote server, which is operator-run and outside the gateway.'
+summary:
+  types:
+  - none
+  api_key_in: []
+  oauth2_flows: []
+  anonymous_operations: 15
+  credentialed_operations: 0
+schemes: []
+policy:
+  credentials_rejected:
+    headers:
+    - Authorization
+    - Cookie
+    - Proxy-Authorization
+    status: 400
+    body: '{"error":"credentials_rejected","message":"This public gateway does not accept credentials. Retry without authentication or cookies."}'
+    observed: '2026-09-19 on GET /v1/projects'
+  rationale: SECURITY.md — the gateway is "deliberately capability-poor"; it constructs upstream requests from scratch
+    so caller headers never cross the trust boundary, and it is a stated security defect if any Commons surface asks
+    a participant to send credentials anywhere but api.github.com.
+  a2a_endpoint: POST /a2a/sidequest is likewise anonymous; the 1.0-negotiated Agent Card declares securitySchemes/securityRequirements
+    for an unauthenticated interface.
+related_surfaces:
+  github_participation:
+    note: Proposing and voting use the participant's own GitHub credential (Issues write) sent only to api.github.com,
+      documented in the provider's separate participation contract (sidequest-openapi.json, http bearer scheme participantGitHubToken).
+      Not a credential this provider issues or receives.
+  kimetsu_remote:
+    scheme: http bearer
+    token_env: KIMETSU_REMOTE_TOKEN
+    issuance: operator-generated (--token / --tokens-file), one per teammate; writes attributed per token; rate limited
+      per token
+    transport: plain HTTP unless --features tls or a TLS proxy
+    unauthenticated: GET /healthz, GET /metrics
+    docs: https://kimetsu.dev/docs/remote/
+  kimetsu_local:
+    note: The local CLI/MCP server needs no credential for storage and retrieval; a model credential (CLAUDE_CODE_OAUTH_TOKEN,
+      Anthropic/OpenAI/Bedrock settings) is optional and used only for `kimetsu ask`, chat and the distiller.

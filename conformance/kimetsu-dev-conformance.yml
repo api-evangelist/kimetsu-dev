@@ -1,0 +1,113 @@
+generated: '2026-09-19'
+method: searched
+source: Live probes 2026-09-19 of https://agents.kimetsu.dev (OpenAPI, agent card with and without A2A-Version, message/send,
+  SendMessage, tools/list, constraint checks, response headers), https://kimetsu.dev (/.well-known/*, llms.txt, robots.txt,
+  schemas/*), plus the provider docs. Each entry names its evidence.
+standards:
+- id: a2a
+  conforms: true
+  version: 0.3 (default card) and 1.0 (A2A-Version negotiated)
+  evidence: 'Agent Card at agents.kimetsu.dev/.well-known/agent-card.json graded conformant (a2a/kimetsu-dev-a2a.yml);
+    POST /a2a/sidequest answered message/send (0.3) and SendMessage with A2A-Version 1.0, both HTTP 200 with agent-role
+    text parts.'
+- id: a2a-registry-publication
+  conforms: true
+  evidence: Provider lists its A2A Registry package name dev.kimetsu.sidequest_commons_guide in the gateway directory,
+    llms.txt and AGENT_GATEWAY.md; this repo was seeded from that registry listing.
+- id: openapi-3.1
+  conforms: true
+  evidence: https://agents.kimetsu.dev/openapi.json parses as OpenAPI 3.1.0, 15 operations, every one with operationId,
+    summary, tags and 200/400/405 (or 200/204/400/413/415) responses; servers[0] https://agents.kimetsu.dev; info.license
+    MIT with SPDX identifier.
+- id: json-rpc-2.0
+  conforms: true
+  evidence: components.schemas JsonRpcRequest/JsonRpcResponse (jsonrpc const "2.0"); live -32601 error object for
+    an unknown method.
+- id: json-schema-2020-12
+  conforms: true
+  evidence: https://kimetsu.dev/schemas/well-known-agent-directory-v1.schema.json and /schemas/agent-directory-v1.schema.json
+    declare $schema draft/2020-12 with $id, required, const and additionalProperties false; the discovery documents
+    reference them via $schema. Saved in json-schema/.
+- id: llms-txt
+  conforms: true
+  evidence: https://kimetsu.dev/llms.txt (200, text/plain) with H1, blockquote summary and sectioned link lists; a second
+    llms.txt on agents.kimetsu.dev; /llms-full.txt (263 KB) also served.
+- id: mcp
+  conforms: true
+  scope: local stdio server only
+  evidence: Docs state `kimetsu mcp serve` exposes ~28 kimetsu_* tools to Claude Code, Codex, Cursor, Pi, OpenClaw over
+    MCP, and Kimetsu Remote serves HTTP MCP; not probed (no hosted endpoint). The A2A endpoint is explicitly not MCP
+    (tools/list -> -32601).
+- id: mcp-registry-publication
+  conforms: false
+  evidence: registry.modelcontextprotocol.io/v0/servers?search=kimetsu returned count 0 on 2026-09-19.
+- id: rfc8615-well-known
+  conforms: true
+  evidence: Provider-defined /.well-known/kimetsu-agents.json served on the apex and the agents host; A2A card at the
+    RFC 8615 path on the agents host.
+- id: rfc9116-security-txt
+  conforms: false
+  evidence: /.well-known/security.txt 404 on kimetsu.dev, www and agents.kimetsu.dev. Disclosure policy exists only as
+    SECURITY.md in the GitHub repos.
+- id: oauth2
+  conforms: false
+  evidence: No securitySchemes in the OpenAPI; /.well-known/oauth-authorization-server and oauth-protected-resource 404
+    on every host; the gateway answers 400 credentials_rejected to any Authorization header.
+- id: oidc
+  conforms: false
+  evidence: /.well-known/openid-configuration 404 on every host.
+- id: rfc9457-problem-details
+  conforms: false
+  evidence: 'Errors are {"error":"<code>","message":"<text>"} JSON (observed 400 credentials_rejected, 404 not_found,
+    405 method_not_allowed); no application/problem+json.'
+- id: cors
+  conforms: true
+  evidence: Access-Control-Allow-Origin * on every gateway response; OPTIONS /a2a/sidequest returns 204 with allow-methods
+    POST, OPTIONS and allow-headers Content-Type, A2A-Version.
+- id: http-caching
+  conforms: true
+  evidence: Cache-Control public, max-age=60/s-maxage=300 on /v1/projects, max-age=30/s-maxage=120/stale-while-revalidate=300
+    on /v1/sidequest*, no-store on /health; etag/last-modified exposed via Access-Control-Expose-Headers.
+- id: security-response-headers
+  conforms: true
+  evidence: Content-Security-Policy default-src 'none', X-Content-Type-Options nosniff, X-Frame-Options DENY, Referrer-Policy
+    no-referrer, Cross-Origin-Resource-Policy cross-origin on every gateway response.
+- id: robots-txt-agent-allowlist
+  conforms: true
+  evidence: agents.kimetsu.dev/robots.txt enumerates GPTBot, OAI-SearchBot, ChatGPT-User, ClaudeBot, Claude-Web, Claude-SearchBot,
+    PerplexityBot, Perplexity-User, Google-Extended, Applebot-Extended, cohere-ai, Meta-ExternalAgent with Allow /;
+    kimetsu.dev/robots.txt allows all and names llms.txt and the discovery manifest.
+- id: semver
+  conforms: true
+  evidence: Changelog preamble commits to SemVer 2.0.0 from v1.0.0; npm/crates.io versions 1.0.0 -> 2.8.0 follow it.
+- id: keep-a-changelog
+  conforms: true
+  evidence: CHANGELOG.md / docs/changelog follow Keep a Changelog 1.1.0 (Unreleased, Added/Fixed/Security sections).
+- id: pagination
+  conforms: false
+  applicability: na
+  evidence: Feeds are complete documents (1 proposal, 1 winner, 2 passports on 2026-09-19); no cursor/offset parameters
+    exist and query strings are rejected with 400.
+- id: idempotency
+  conforms: false
+  applicability: na
+  evidence: The gateway has no write surface (405 on POST to feeds; the A2A POST is stateless deterministic guidance),
+    so idempotency keys do not apply. See conventions/kimetsu-dev-conventions.yml.
+- id: rfc8594-sunset-deprecation-headers
+  conforms: false
+  evidence: None documented; legacy agent.json and the pre-cutover discovery alias are kept with no end date.
+- id: soc2-iso27001-certifications
+  conforms: false
+  evidence: No trust center, certification or compliance page (/trust, /security, /legal 404). Open-source single-maintainer
+    project; not asserted.
+- id: domain-standard-a2a-agentcard
+  conforms: true
+  domain: agent infrastructure / agent discovery
+  evidence: 'Domain-standard signature read from the contract itself: the OpenAPI declares GET /.well-known/agent-card.json
+    and /.well-known/agent.json operations with an A2A-Version header parameter, and POST /a2a/sidequest whose JsonRpcRequest.method
+    enum is [message/send, SendMessage] — the A2A 0.3 and 1.0 method names. The served card is A2A-conformant.'
+- id: domain-standard-llms-txt
+  conforms: true
+  domain: agent-readable documentation
+  evidence: GET /llms.txt is an operation in the OpenAPI (get_llm_discovery_guide) and the document is served on two
+    hosts.

@@ -1,0 +1,28 @@
+specification: API Commons Plans
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/Plans
+provider: Kimetsu
+providerId: kimetsu-dev
+created: '2026-09-19'
+modified: '2026-09-19'
+method: searched
+sources:
+- https://kimetsu.dev/ (About — "released under the MIT and Apache-2.0 licenses")
+- https://kimetsu.dev/docs/
+- https://kimetsu.dev/docs/how-kimetsu-works/configuration/ (tier = free | deep)
+- https://agents.kimetsu.dev/ (authentication.required false)
+- https://kimetsu.dev/pricing (404 on 2026-09-19)
+tags:
+- Open Source
+- Free
+- AI Agents
+description: 'No paid plans exist. Kimetsu is open source (MIT OR Apache-2.0) and runs on the user''s machine; the
+  Agent Gateway and A2A guide are anonymous and free ("No Commons login. No token handoff. No paywall."). The word
+  "tier" in the docs is a product configuration, not a price: tier = "free" runs the model-free memory pipeline
+  with zero API calls, tier = "deep" lets Kimetsu call a cheap model the user pays their own provider for (the
+  docs headline "$0 API cost to store and recall"). Kimetsu Remote is self-hosted, so its cost is the operator''s
+  infrastructure. No enterprise or contact-sales offer is published; /pricing 404s.'
+plan_count: 0
+plans: []
+notes:
+- Kimetsu tier config (free / deep / auto) is recorded in the CLI artifact as configuration, not as a plan.

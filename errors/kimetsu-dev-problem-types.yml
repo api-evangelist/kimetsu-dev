@@ -1,0 +1,74 @@
+generated: '2026-09-19'
+method: derived
+probe: true
+source: openapi/kimetsu-dev-agent-gateway-openapi.yml (4xx responses on all 15 operations) enriched with bodies observed
+  live on 2026-09-19 against https://agents.kimetsu.dev, and the JSON-RPC error shape from POST /a2a/sidequest.
+format: custom
+envelope:
+  shape: '{"error": "<snake_case_code>", "message": "<human text>"}'
+  content_type: application/json; charset=utf-8
+  note: 'Not RFC 9457; the OpenAPI types every 4xx body as an open object (additionalProperties true). The A2A route
+    returns JSON-RPC 2.0 error objects instead ({jsonrpc, id, error: {code, message}}).'
+problems:
+- status: 400
+  code: credentials_rejected
+  title: Credentials rejected
+  detail: This public gateway does not accept credentials. Retry without authentication or cookies.
+  observed: true
+  trigger: Any Authorization, Cookie or Proxy-Authorization header on any route (observed on GET /v1/projects with a
+    bearer token).
+  remediation: Remove the header. Reads are anonymous by design; there is no credentialed mode.
+  source_operation: openapi/kimetsu-dev-agent-gateway-openapi.yml#list_projects
+- status: 400
+  code: null
+  title: Query strings rejected
+  detail: Query strings and caller-supplied fetch targets are rejected (OpenAPI 400 description "Credential headers
+    or query strings were rejected.").
+  observed: true
+  trigger: GET /v1/projects?x=1 returned 400 (body code not captured in this pass).
+  remediation: Call the exact path with no query; the feeds have no filter parameters.
+  source_operation: openapi/kimetsu-dev-agent-gateway-openapi.yml#list_projects
+- status: 404
+  code: not_found
+  title: No public gateway route exists at this path
+  observed: true
+  trigger: Any path outside the 15 published routes (observed on /.well-known/security.txt, /openapi.yaml, /mcp).
+  remediation: Use the endpoints map in GET / (get_agent_gateway).
+- status: 405
+  code: method_not_allowed
+  title: Method not allowed
+  detail: Only GET, HEAD, OPTIONS, and POST to the A2A endpoint are supported.
+  observed: true
+  trigger: POST /v1/projects.
+  remediation: The gateway is read-only; writes (proposals, votes) go directly to api.github.com per the participation
+    contract.
+  source_operation: openapi/kimetsu-dev-agent-gateway-openapi.yml#list_projects
+- status: 413
+  code: null
+  title: Request body exceeded 16,384 bytes
+  observed: false
+  source_operation: openapi/kimetsu-dev-agent-gateway-openapi.yml#request_sidequest_guidance
+  remediation: Keep the JSON-RPC body under 16 KB; the guide answers short questions.
+- status: 415
+  code: null
+  title: Content-Type was not application/json
+  observed: false
+  source_operation: openapi/kimetsu-dev-agent-gateway-openapi.yml#request_sidequest_guidance
+  remediation: Send Content-Type application/json.
+- status: 200
+  code: -32601
+  title: JSON-RPC Method not found
+  format: json-rpc-2.0
+  observed: true
+  trigger: POST /a2a/sidequest with method tools/list.
+  remediation: Only message/send (A2A 0.3) and SendMessage (A2A 1.0, with A2A-Version 1.0) are accepted.
+  source_operation: openapi/kimetsu-dev-agent-gateway-openapi.yml#request_sidequest_guidance
+- status: 204
+  code: null
+  title: Notification accepted without a body
+  observed: false
+  source_operation: openapi/kimetsu-dev-agent-gateway-openapi.yml#request_sidequest_guidance
+  note: A JSON-RPC request without an id is treated as a notification.
+rate_limit_signal:
+  status: null
+  note: No 429 is documented or was observed on the gateway; see rate-limits/kimetsu-dev-rate-limits.yml.

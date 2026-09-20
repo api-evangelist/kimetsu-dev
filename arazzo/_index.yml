@@ -1,0 +1,8 @@
+generated: '2026-09-19'
+method: generated
+workflows:
+- file: kimetsu-dev-discover-and-ask-workflow.yml
+  workflowId: discover-and-ask
+  title: Discover Sidequest Commons and ask the A2A guide
+  summary: Directory -> participation gateway (quotas, GitHub action endpoints) -> proposal feed -> A2A message/send.
+    Anonymous; grounded in four operationIds of the Agent Gateway OpenAPI.

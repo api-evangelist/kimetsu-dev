@@ -1,0 +1,37 @@
+generated: '2026-09-19'
+method: searched
+probe: true
+source: 'Conventional paths probed live on https://kimetsu.dev 2026-09-19 — /accessibility 404, /accessibility/vpat 404,
+  /legal 404, /legal/subprocessors 404, /legal/dpa 404, /privacy 404, /privacy/requests 404, /transparency 404, /trust
+  404, /security 404, /security/sbom 404, /docs/data-residency 404, /ai 404, /ai/transparency 404, /legal/report-content
+  404, /terms 404 (all real HTTP 404s with the site''s HTML 404 page). Docs site (llms-full.txt, 263 KB) searched
+  for residency, export, age, SBOM, subprocessor and support-period language. GitHub RodCor/kimetsu.dev SECURITY.md
+  and RodCor/sidequest-commons SECURITY.md, THREAT_MODEL.md read.'
+operator:
+  name: Rodrigo Córdoba (GitHub RodCor) — individual open-source maintainer
+  jurisdiction: not stated on the site
+  note: No legal entity, terms of service, privacy policy or contact address is published; the homepage names the
+    maintainer and points to LinkedIn for contact.
+signals: {}
+not_found:
+- sbom
+- support_lifetime
+- accessibility_conformance
+- training_data_summary
+- ai_transparency
+- global_privacy_control
+- data_subject_request
+- subprocessors
+- data_residency
+- incident_notification
+- age_assurance
+- notice_and_action
+- transparency_report
+- exit_assistance
+context:
+- 'The product is local-first by design ("No external vector DB, no cloud, no telemetry"; "the whole brain is one
+  SQLite file per project") and brain export/import scrubs credentials and PII — product properties, not a regulatory
+  signal, so nothing is recorded above.'
+- Both GitHub repos carry a SECURITY.md (private advisory reporting) and sidequest-commons a THREAT_MODEL.md; recorded
+  in security/kimetsu-dev-vulnerability-disclosure.yml, not here.
+- cargo-audit (RUSTSEC) and cargo-deny run in CI per the contributing page; no SBOM is published, and none is derived.

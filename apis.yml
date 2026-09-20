@@ -1,23 +1,237 @@
 aid: kimetsu-dev
-name: Sidequest Commons
-description: 'Sidequest Commons is a company surfaced via the API Evangelist harvest backlog (source:
-  a2a-registry) and added to the network as a stub for full-pipeline profiling.'
+name: Kimetsu
+description: 'Kimetsu (kimetsu.dev) is Rodrigo Córdoba''s open-source infrastructure for coding agents. Kimetsu itself
+  is a local, model-free memory sidecar — one Rust binary and one SQLite brain per project — that Claude Code, Codex,
+  Cursor, Pi and OpenClaw load as a local-stdio MCP server (~28 kimetsu_* tools), with a CLI, npm/cargo/PyPI packages,
+  a self-hostable Kimetsu Remote HTTP MCP server and published benchmark numbers. The domain also operates agents.kimetsu.dev,
+  a credential-free, read-only Agent Gateway with a published OpenAPI 3.1.0 (15 operations), an A2A Agent Card served
+  at the RFC 8615 path (0.3 by default, 1.0 negotiated with the A2A-Version header) and a live JSON-RPC guide for
+  Sidequest Commons — the maintainer''s daily public project-selection loop run through GitHub issues and reactions
+  — plus llms.txt on two hosts, a /.well-known/kimetsu-agents.json discovery pointer and JSON Schemas for its discovery
+  documents. Everything is MIT OR Apache-2.0. Seeded from the A2A Registry listing dev.kimetsu.sidequest_commons_guide
+  under the harvest name "Sidequest Commons".'
+image: https://kimetsu.dev/kimetsu-logo.png
 url: https://raw.githubusercontent.com/api-evangelist/kimetsu-dev/refs/heads/main/apis.yml
 x-type: company
 x-source: harvest:a2a-registry
-x-tier: stub
-x-tier-reason: harvest
+x-tier: profiled
+x-tier-reason: full enrichment pass 2026-09-19 (a2a-registry harvest origin; renamed from the registry's provider.organization
+  "Sidequest Commons" to the domain's own product name)
 specificationVersion: '0.20'
 created: '2026-09-19'
 modified: '2026-09-19'
 tags:
 - Company
-apis: []
+- AI Agents
+- Agent Memory
+- Coding Agents
+- MCP
+- A2A
+- Developer Tools
+- Open Source
+- Rust
+- Agent Discovery
+- Public Goods
+apis:
+- aid: kimetsu-dev:agent-gateway
+  name: kimetsu.dev Agent Gateway
+  description: 'Credential-free, read-only JSON discovery API on agents.kimetsu.dev (OpenAPI 3.1.0, 15 operations):
+    the gateway directory, llms.txt, robots.txt, the OpenAPI itself, the well-known directory pointer, the A2A card
+    (canonical and legacy paths), a health route, the project directory and the sanitized Sidequest Commons feeds
+    (participation gateway with quotas and GitHub action endpoints, proposals, winners, contribution passports), plus
+    one POST — the A2A JSON-RPC guidance endpoint. Rejects credentials (400) and query strings (400); writes return 405.'
+  humanURL: https://kimetsu.dev/projects/
+  baseURL: https://agents.kimetsu.dev
+  tags:
+  - Agent Discovery
+  - AI Agents
+  - Open Source
+  - Public Goods
+  properties:
+  - type: OpenAPI
+    url: openapi/kimetsu-dev-agent-gateway-openapi.yml
+  - type: OpenAPI
+    name: OpenAPI (provider-hosted; verbatim copy in openapi/_original/)
+    url: https://agents.kimetsu.dev/openapi.json
+  - type: Documentation
+    url: https://kimetsu.dev/projects/
+  - type: APIReference
+    url: https://agents.kimetsu.dev/openapi.json
+  - type: LLMsTxt
+    url: llms/kimetsu-dev-agent-gateway-llms.txt
+  - type: Overlay
+    url: overlays/kimetsu-dev-agent-gateway-overlay.yaml
+  - type: Arazzo
+    name: Discover Sidequest Commons and ask the A2A guide
+    url: arazzo/kimetsu-dev-discover-and-ask-workflow.yml
+  - type: ErrorCatalog
+    url: errors/kimetsu-dev-problem-types.yml
+  - type: Authentication
+    url: authentication/kimetsu-dev-authentication.yml
+  - type: RateLimits
+    url: rate-limits/kimetsu-dev-rate-limits.yml
+  - type: DataModel
+    url: data-model/kimetsu-dev-data-model.yml
+  - type: JSONSchema
+    name: agent-directory-v1 (GET / and /agent-gateway.json)
+    url: json-schema/kimetsu-dev-agent-directory-v1.schema.json
+  image: https://kimetsu.dev/kimetsu-logo.png
+- aid: kimetsu-dev:sidequest-commons-guide
+  name: Sidequest Commons Guide (A2A)
+  description: 'A2A agent (JSON-RPC; 0.3 message/send by default, 1.0 SendMessage with A2A-Version 1.0) that returns
+    deterministic, credential-free guidance on discovering Sidequest Commons and on proposing, voting and contributing
+    through GitHub. Two skills: discover_sidequests, explain_participation. No streaming, push notifications or tasks;
+    performs no writes and rejects credentials. Listed in the A2A Registry as dev.kimetsu.sidequest_commons_guide.'
+  humanURL: https://rodcor.github.io/sidequest-commons/agents/
+  baseURL: https://agents.kimetsu.dev/a2a/sidequest
+  tags:
+  - A2A
+  - AI Agents
+  - Open Source
+  - Public Goods
+  properties:
+  - type: AgentCard
+    url: a2a/kimetsu-dev-a2a.yml
+  - type: AgentCard
+    name: Agent Card (provider-hosted)
+    url: https://agents.kimetsu.dev/.well-known/agent-card.json
+  - type: Documentation
+    url: https://github.com/RodCor/sidequest-commons/blob/main/AGENT_GATEWAY.md
+  - type: LLMsTxt
+    url: llms/kimetsu-dev-sidequest-commons-llms.txt
+  - type: JSONSchema
+    name: proposal-v1 machine input schema
+    url: json-schema/kimetsu-dev-sidequest-proposal-v1.schema.json
+  - type: SourceCode
+    url: https://github.com/RodCor/sidequest-commons
+  image: https://kimetsu.dev/kimetsu-logo.png
+- aid: kimetsu-dev:kimetsu-mcp-server
+  name: Kimetsu MCP Server (local stdio)
+  description: 'The memory product''s agent surface: `kimetsu mcp serve` exposes ~28 kimetsu_* tools (context retrieval,
+    lesson recording, memory CRUD and curation, citations, conflict resolution, embedding-model management, repo ingest,
+    skill bridge) over stdio to Claude Code, Codex, Cursor, Pi, OpenClaw and Gemini CLI, backed by a per-project SQLite
+    brain with no cloud and no telemetry. No provider-hosted endpoint; Kimetsu Remote (beta) lets an operator self-host
+    the same surface over HTTP MCP with bearer tokens. Distributed as npm kimetsu-ai, crates.io kimetsu-cli and GitHub
+    Release archives (v2.8.0, 2026-09-09).'
+  humanURL: https://kimetsu.dev/docs/how-kimetsu-works/interfaces/
+  tags:
+  - MCP
+  - Agent Memory
+  - Coding Agents
+  - Developer Tools
+  properties:
+  - type: MCPServer
+    url: mcp/kimetsu-dev-mcp.yml
+  - type: ToolCrosswalk
+    url: mcp/kimetsu-dev-tool-crosswalk.yml
+  - type: Documentation
+    url: https://kimetsu.dev/docs/how-kimetsu-works/interfaces/
+  - type: GettingStarted
+    url: https://kimetsu.dev/docs/install/
+  - type: CLI
+    url: cli/kimetsu-dev-cli.yml
+  - type: Packages
+    url: packages/kimetsu-dev-packages.yml
+  - type: AgentSkill
+    name: kimetsu-brain (provider-published Pi skill, verbatim)
+    url: skills/kimetsu-dev-kimetsu-brain-SKILL.md
+  - type: SourceCode
+    url: https://github.com/RodCor/kimetsu
+  image: https://kimetsu.dev/kimetsu-logo.png
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: DomainSecurity
+  url: security/kimetsu-dev-domain-security.yml
+- type: AgenticAccess
+  url: agentic-access/kimetsu-dev-agentic-access.yml
 - type: Website
   url: https://kimetsu.dev/
+- type: DeveloperPortal
+  url: https://kimetsu.dev/docs/
+- type: Documentation
+  url: https://kimetsu.dev/docs/
+- type: APIReference
+  url: https://agents.kimetsu.dev/openapi.json
+- type: GettingStarted
+  url: https://kimetsu.dev/docs/install/
+- type: Support
+  url: https://github.com/RodCor/kimetsu/issues
+- type: GitHubOrganization
+  url: https://github.com/RodCor
+- type: SourceCode
+  url: https://github.com/RodCor/kimetsu
+- type: ChangeLog
+  url: https://kimetsu.dev/docs/changelog/
+- type: ChangeLog
+  name: Structured recent entries
+  url: changelog/kimetsu-dev-changelog.yml
+- type: License
+  url: https://github.com/RodCor/kimetsu/blob/main/LICENSE-MIT
+  name: MIT OR Apache-2.0 (LICENSE-MIT / LICENSE-APACHE)
+- type: Security
+  url: https://github.com/RodCor/kimetsu.dev/blob/main/SECURITY.md
+  name: Security policy (private GitHub advisory reporting; agent gateway threat model)
+- type: Robots
+  url: https://kimetsu.dev/robots.txt
+- type: LLMsTxt
+  url: llms/kimetsu-dev-llms.txt
+- type: LLMsTxt
+  name: llms.txt (provider-hosted)
+  url: https://kimetsu.dev/llms.txt
+- type: WellKnown
+  url: well-known/kimetsu-dev-well-known.yml
+- type: JSONSchema
+  name: well-known-agent-directory-v1 (/.well-known/kimetsu-agents.json)
+  url: json-schema/kimetsu-dev-well-known-agent-directory-v1.schema.json
+- type: AgentCard
+  url: a2a/kimetsu-dev-a2a.yml
+- type: MCPServer
+  url: mcp/kimetsu-dev-mcp.yml
+- type: ToolCrosswalk
+  url: mcp/kimetsu-dev-tool-crosswalk.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: AgentSkill
+  url: skills/kimetsu-dev-kimetsu-brain-SKILL.md
+- type: AgentSkill
+  url: skills/kimetsu-dev-discover-sidequest-commons.md
+- type: Packages
+  url: packages/kimetsu-dev-packages.yml
+- type: SDKs
+  url: packages/kimetsu-dev-packages.yml
+  name: '@kimetsu-ai/sdk (TypeScript) and kimetsu (Python) clients for Kimetsu Remote'
+- type: CLI
+  url: cli/kimetsu-dev-cli.yml
+- type: Conformance
+  url: conformance/kimetsu-dev-conformance.yml
+- type: ErrorCatalog
+  url: errors/kimetsu-dev-problem-types.yml
+- type: Lifecycle
+  url: lifecycle/kimetsu-dev-lifecycle.yml
+- type: Authentication
+  url: authentication/kimetsu-dev-authentication.yml
+- type: Conventions
+  url: conventions/kimetsu-dev-conventions.yml
+- type: DataModel
+  url: data-model/kimetsu-dev-data-model.yml
+- type: Overlay
+  url: overlays/kimetsu-dev-agent-gateway-overlay.yaml
+- type: Arazzo
+  url: arazzo/kimetsu-dev-discover-and-ask-workflow.yml
+- type: Plans
+  url: plans/kimetsu-dev-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/kimetsu-dev-rate-limits.yml
+- type: RegulatoryPosture
+  url: regulatory/kimetsu-dev-regulatory-posture.yml
+- type: VulnerabilityDisclosure
+  url: security/kimetsu-dev-vulnerability-disclosure.yml
+x-enrichment:
+  date: '2026-09-19'
+  status: enriched
+  artifacts_added: 41
+  pass: local-v3

@@ -1,0 +1,75 @@
+arazzo: 1.0.1
+info:
+  title: Discover Sidequest Commons and ask the A2A guide
+  version: 1.0.0
+  summary: Read the gateway directory, the participation gateway (quotas + GitHub action endpoints) and the proposal
+    feed, then ask the deterministic A2A guide how to participate. Anonymous end to end.
+  description: 'Grounded in openapi/kimetsu-dev-agent-gateway-openapi.yml; every operationId below exists there verbatim.
+    No step sends a credential — the gateway rejects them. The GitHub-side write (proposeSidequest / voteForSidequest)
+    is deliberately outside this workflow because it runs against api.github.com under the participant''s own token.'
+sourceDescriptions:
+- name: gateway
+  url: ../openapi/kimetsu-dev-agent-gateway-openapi.yml
+  type: openapi
+workflows:
+- workflowId: discover-and-ask
+  summary: Directory -> participation gateway -> proposals -> A2A guidance
+  inputs:
+    type: object
+    properties:
+      question:
+        type: string
+        description: A natural-language question for the Sidequest Commons Guide.
+        default: How do I propose a project?
+  steps:
+  - stepId: read-directory
+    description: Fetch the gateway directory (endpoints, constraints, projects).
+    operationId: get_agent_gateway
+    successCriteria:
+    - condition: $statusCode == 200
+    - condition: $response.body#/constraints/read_only == true
+    outputs:
+      sidequestGateway: $response.body#/endpoints/sidequest_gateway
+      a2aEndpoint: $response.body#/endpoints/sidequest_a2a
+  - stepId: read-participation-gateway
+    description: Fetch quotas, allowed categories and the exact GitHub action endpoints.
+    operationId: get_sidequest_gateway
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      proposeEndpoint: $response.body#/actions/propose/endpoint
+      newcomerProposalsPer24h: $response.body#/quotas/newcomer/proposalsPer24Hours
+      inputSchema: $response.body#/actions/propose/machineInputSchema
+  - stepId: read-proposals
+    description: Fetch the sanitized eligible-proposal feed; each item carries its exact vote endpoint.
+    operationId: list_sidequest_proposals
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      proposals: $response.body#/proposals
+      generatedAt: $response.body#/generatedAt
+  - stepId: ask-the-guide
+    description: Ask the A2A guide (A2A 0.3 message/send). Deterministic text; no writes.
+    operationId: request_sidequest_guidance
+    requestBody:
+      contentType: application/json
+      payload:
+        jsonrpc: '2.0'
+        id: 1
+        method: message/send
+        params:
+          message:
+            role: user
+            messageId: arazzo-1
+            parts:
+            - kind: text
+              text: $inputs.question
+    successCriteria:
+    - condition: $statusCode == 200
+    - condition: $response.body#/result/role == 'agent'
+    outputs:
+      guidance: $response.body#/result/parts/0/text
+  outputs:
+    proposeEndpoint: $steps.read-participation-gateway.outputs.proposeEndpoint
+    proposals: $steps.read-proposals.outputs.proposals
+    guidance: $steps.ask-the-guide.outputs.guidance

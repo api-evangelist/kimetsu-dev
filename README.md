@@ -64,5 +64,10 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Sidequest Commons is a company surfaced via the API Evangelist harvest backlog (source: a2a-registry) and added to the network as a stub for full-pipeline profiling.
-- https://kimetsu.dev/
+Kimetsu (kimetsu.dev) is Rodrigo Córdoba's open-source infrastructure for coding agents: a local, model-free memory sidecar (one Rust binary, one SQLite brain per project) that hosts such as Claude Code, Codex, Cursor, Pi and OpenClaw load as a local-stdio MCP server, plus **agents.kimetsu.dev**, a credential-free read-only Agent Gateway with a published OpenAPI 3.1.0, an A2A Agent Card (0.3 default / 1.0 negotiated) and a live JSON-RPC guide for **Sidequest Commons**, the maintainer's daily public project-selection loop run through GitHub. This repository was seeded from the A2A Registry listing `dev.kimetsu.sidequest_commons_guide` (harvest name "Sidequest Commons").
+
+- Website: https://kimetsu.dev/
+- Docs: https://kimetsu.dev/docs/
+- Agent Gateway: https://agents.kimetsu.dev/ (OpenAPI: https://agents.kimetsu.dev/openapi.json)
+- A2A Agent Card: https://agents.kimetsu.dev/.well-known/agent-card.json
+- Source: https://github.com/RodCor/kimetsu

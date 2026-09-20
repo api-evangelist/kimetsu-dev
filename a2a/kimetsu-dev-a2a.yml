@@ -1,0 +1,133 @@
+generated: '2026-09-19'
+method: probed
+source: https://agents.kimetsu.dev/.well-known/agent-card.json
+card:
+  file: a2a/kimetsu-dev-agent-card.json
+  a2a_1_0_variant: a2a/kimetsu-dev-agent-card-a2a-1.0.json
+discovery:
+  path: /.well-known/agent-card.json
+  canonical: true
+  host: agents.kimetsu.dev
+  legacy_path:
+    path: /.well-known/agent.json
+    status: 200
+    note: Byte-identical (1,837 bytes) to the canonical card on the same host.
+  version_negotiation:
+    header: A2A-Version
+    default: '0.3'
+    note: 'Without the header the host serves the 0.3-shaped card saved as the primary file (protocolVersion 0.3.0,
+      preferredTransport, additionalInterfaces). With "A2A-Version: 1.0" the same path returns a 1.0-shaped card
+      (supportedInterfaces[{url, protocolBinding: JSONRPC, protocolVersion: "1.0"}], securitySchemes, securityRequirements)
+      and the response carries "Vary: A2A-Version". Both bodies are saved verbatim. The A2A Registry entry that
+      seeded this repo (dev.kimetsu.sidequest_commons_guide) points at this same URL.'
+  not_served_on:
+  - host: kimetsu.dev
+    status: 404
+    note: Real HTTP 404 with the site's HTML 404 page (13,236 bytes) on both /.well-known/agent-card.json and /.well-known/agent.json;
+      the apex instead serves /.well-known/kimetsu-agents.json, whose a2a_agent_card field points at the agents host.
+  - host: rodcor.github.io/sidequest-commons
+    status: 404
+    note: The Sidequest Commons human site (GitHub Pages) 404s both paths; its agent-gateway.json and llms.txt point
+      at the agents.kimetsu.dev card.
+  ownership_note: 'Served from agents.kimetsu.dev, a subdomain of the record''s registrable domain and the OpenAPI
+    servers[0] host. provider.organization is "Sidequest Commons" with provider.url https://rodcor.github.io/sidequest-commons/
+    — a sibling project of the same maintainer (GitHub RodCor / Rodrigo Córdoba), listed alongside Kimetsu in the
+    gateway''s /v1/projects and on https://kimetsu.dev/projects/. The gateway''s own SECURITY.md (github.com/RodCor/kimetsu.dev)
+    describes this exact endpoint. Ownership is not in question.'
+x-evidence:
+  fetched: '2026-09-19'
+  url: https://agents.kimetsu.dev/.well-known/agent-card.json
+  http_status: 200
+  content_type: application/json; charset=utf-8
+  content_length: 1837
+  body_parses_as: JSON object with AgentCard shape (protocolVersion, name, description, url, preferredTransport,
+    additionalInterfaces, provider, version, documentationUrl, capabilities, defaultInputModes, defaultOutputModes,
+    skills)
+agent_card:
+  name: Sidequest Commons Guide
+  url: https://agents.kimetsu.dev/a2a/sidequest
+  version: 1.0.0
+  protocol_version: 0.3.0
+  preferred_transport: JSONRPC
+  provider:
+    organization: Sidequest Commons
+    url: https://rodcor.github.io/sidequest-commons/
+  documentation_url: https://github.com/RodCor/sidequest-commons/blob/main/AGENT_GATEWAY.md
+  capabilities:
+    streaming: false
+    pushNotifications: false
+    stateTransitionHistory: false
+  default_input_modes:
+  - text/plain
+  default_output_modes:
+  - text/plain
+  security_schemes: none declared in the 0.3 card; the 1.0 variant declares securitySchemes/securityRequirements
+    (anonymous), consistent with the gateway's credential-rejecting policy
+  skill_count: 2
+  skills:
+  - id: discover_sidequests
+    name: Discover Sidequests
+    tags:
+    - open-source
+    - projects
+    - discovery
+    - public-good
+  - id: explain_participation
+    name: Explain Sidequest participation
+    tags:
+    - github
+    - proposals
+    - voting
+    - contributions
+endpoint_probe:
+  fetched: '2026-09-19'
+  url: https://agents.kimetsu.dev/a2a/sidequest
+  options:
+    http_status: 204
+    allow_methods: POST, OPTIONS
+    allow_headers: Content-Type, A2A-Version
+  jsonrpc_0_3_message_send:
+    method: message/send
+    http_status: 200
+    file: a2a/kimetsu-dev-a2a-message-send-0.3-probe.json
+    note: 'Returned {kind: message, role: agent, parts[{kind: text}]} with deterministic guidance text pointing at the Sidequest gateway, proposals feed and human site. No credentials sent, none requested.'
+  jsonrpc_1_0_send_message:
+    method: SendMessage
+    header: 'A2A-Version: 1.0'
+    http_status: 200
+    file: a2a/kimetsu-dev-a2a-sendmessage-1.0-probe.json
+    note: 'Returned {message: {role: ROLE_AGENT, parts[{text, mediaType: text/plain}]}}. The endpoint is live on both protocol generations.'
+  mcp_tools_list:
+    method: tools/list
+    http_status: 200
+    error: '-32601 Method not found.'
+    note: Confirms the endpoint is A2A-only; it is not an MCP server.
+  constraints_observed:
+    query_string: '400 on GET /v1/projects?x=1'
+    authorization_header: '400 {"error":"credentials_rejected"} on GET with a bearer token' 
+    write_methods: '405 on POST /v1/projects'
+    body_limit: '16,384 bytes (413 documented in the OpenAPI)'
+conformance:
+  spec: A2A 1.0.0 (graded on the default 0.3.0 card; 1.0 variant also served)
+  grade: conformant
+  protocol_version: 0.3.0
+  preferred_transport: JSONRPC
+  deviations: []
+grade_basis: 'capabilities is an OBJECT (streaming/pushNotifications/stateTransitionHistory) — pass; protocolVersion
+  is present at top level ("0.3.0") — pass; skills is an ARRAY of 2 skills each with id/name/description/tags/examples
+  — pass. Optional preferredTransport, defaultInputModes and defaultOutputModes are all declared, so the card clears
+  the near-conformant bar as well. The 1.0-negotiated variant moves protocolVersion into supportedInterfaces[0]
+  (correct for 1.0.0) and adds securitySchemes; capabilities.extendedAgentCard there is a non-1.0.0 key (harmless).
+  The live endpoint corroborates both claims: message/send (0.3) and SendMessage (1.0) each answered 200.'
+deviations:
+- field: capabilities.extendedAgentCard (1.0 variant only)
+  observed: false
+  note: Not a 1.0.0 capabilities key; the 1.0 field is top-level supportsAuthenticatedExtendedCard. No functional impact.
+- field: securitySchemes (0.3 card)
+  observed: absent
+  note: Consistent with an anonymous, credential-rejecting endpoint.
+registry:
+  a2a_registry: https://www.a2a-registry.org/agent/dev.kimetsu.sidequest_commons_guide
+  a2a_registry_live: https://a2aregistry.org/agents/df467402-e691-43ce-b754-f774a4928b81/
+  note: Both URLs are published by the provider in its gateway directory (registries block) and were not independently
+    re-fetched in this pass.

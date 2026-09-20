@@ -1,0 +1,51 @@
+generated: '2026-09-19'
+method: searched
+source: https://kimetsu.dev/docs/changelog/ (SemVer statement), https://kimetsu.dev/docs/remote/ (beta notice), https://kimetsu.dev/docs/contributing/
+  (branch and release process), openapi/kimetsu-dev-agent-gateway-openapi.yml (info.version), a2a/kimetsu-dev-a2a.yml
+  (A2A 0.3 + 1.0 negotiation), https://github.com/RodCor/kimetsu/releases/latest; /status, /pricing, /terms, /privacy
+  on kimetsu.dev all 404 on 2026-09-19.
+versioning:
+  scheme: semver (product) + semver info.version (gateway OpenAPI) + A2A protocol negotiation by header
+  current: 2.8.0
+  current_released: '2026-09-09'
+  gateway_api_version: 1.0.0
+  mechanism: 'Product releases are git tags vX.Y.Z cut from main that drive the release workflow (npm, crates.io and
+    GitHub Release archives ship together). The gateway OpenAPI carries info.version 1.0.0 and no version path segment
+    or header; the A2A surface negotiates protocol generation with the A2A-Version request header (0.3 default, 1.0
+    on request, Vary: A2A-Version). brain.db carries its own schema number (15 at v2.8.0) and upgrades in place when
+    opened by a newer binary.'
+  docs: https://kimetsu.dev/docs/changelog/
+  protocol_versions:
+    a2a:
+    - '0.3'
+    - '1.0'
+    mcp: local stdio; protocol version negotiated per host, not published
+deprecation:
+  policy_url: null
+  sunset_header: false
+  statement: '"From v1.0.0 onward the project follows SemVer normally: patch releases are bug-fix-only, minor releases
+    are backward-compatible additions, and breaking changes require a major bump." (changelog preamble). This is
+    a compatibility commitment, not a deprecation/sunset policy with notice periods, so no Deprecation pointer is
+    emitted.'
+  notes: 'Legacy surfaces kept without a stated end date: the pre-0.3 A2A card path /.well-known/agent.json (byte-identical
+    to the canonical card) and the pre-cutover discovery alias /well-known/kimetsu-agents.json (llms.txt: "the canonical
+    /.well-known alias activates with the Cloudflare cutover" — both now answer 200). Kimetsu Remote is explicitly
+    beta: "may have rough edges or breaking changes before the stable release."'
+support_lifetime:
+  stated_period: null
+  note: No support window or end-of-life statement; `kimetsu update` always moves to the latest GitHub Release.
+sla:
+  url: null
+  uptime_target: null
+  notes: No SLA. The gateway is a free anonymous discovery service; the product runs on the user's own machine.
+status_page: null
+status_page_note: No status page found (/status 404; none linked from the site, llms.txt, the gateway directory or
+  the GitHub repos). The gateway exposes GET /health ({"status":"ok","mode":"public-read-only"}) and Kimetsu Remote
+  exposes unauthenticated /healthz and /metrics, which are liveness probes, not an incident surface.
+changelog: changelog/kimetsu-dev-changelog.yml
+stage:
+  product: active (v2.8.0, 2026-09-09; 8 releases in 90 days)
+  kimetsu_remote: beta
+  sidequest_commons: public alpha v0.2.0 (per https://kimetsu.dev/projects/)
+  agent_gateway: active (gateway directory status field; OpenAPI 1.0.0)
+deprecated_operations: []
