@@ -28,6 +28,18 @@ tags:
 - MCP
 - A2A
 - Developer Tools
+- Open-Source
+- Rust
+- Agent Discovery
+- Public Goods
+tags_raw:
+- Company
+- AI Agents
+- Agent Memory
+- Coding Agents
+- MCP
+- A2A
+- Developer Tools
 - Open Source
 - Rust
 - Agent Discovery
@@ -43,6 +55,11 @@ apis:
   humanURL: https://kimetsu.dev/projects/
   baseURL: https://agents.kimetsu.dev
   tags:
+  - Agent Discovery
+  - AI Agents
+  - Open-Source
+  - Public Goods
+  tags_raw:
   - Agent Discovery
   - AI Agents
   - Open Source
@@ -85,6 +102,11 @@ apis:
   humanURL: https://rodcor.github.io/sidequest-commons/agents/
   baseURL: https://agents.kimetsu.dev/a2a/sidequest
   tags:
+  - A2A
+  - AI Agents
+  - Open-Source
+  - Public Goods
+  tags_raw:
   - A2A
   - AI Agents
   - Open Source
