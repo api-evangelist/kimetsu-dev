@@ -1,3 +1,5 @@
+# x-archived-from: kimetsu-dev-agent-gateway-openapi.yml
+# x-archived-on: 2026-09-26
 # Faithful YAML rendering of https://agents.kimetsu.dev/openapi.json (fetched 2026-09-19, HTTP 200, application/json).
 # Nothing added or removed; the verbatim JSON is in openapi/_original/. API Evangelist annotations live in overlays/.
 openapi: 3.1.0

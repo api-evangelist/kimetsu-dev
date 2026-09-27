@@ -1,0 +1,359 @@
+openapi: 3.2.0
+info:
+  title: Kimetsu Dev Discovery API
+  version: 1.0.0
+  license:
+    name: MIT
+    identifier: MIT
+  description: 'Operations tagged Discovery across 2 of this provider''s published API definitions: kimetsu-dev-agent-gateway-openapi.json, kimetsu-dev-agent-gateway-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://agents.kimetsu.dev
+security: []
+tags:
+- name: Discovery
+  description: Static, anonymous machine-discovery documents.
+paths:
+  /:
+    get:
+      summary: Get agent gateway
+      description: Returns the complete public endpoint directory and safety constraints.
+      operationId: get_agent_gateway
+      security: []
+      responses:
+        '200':
+          description: Successful public response.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '400':
+          description: The request contained a query string or credential-bearing header.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '405':
+          description: The HTTP method is not supported for this route.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+      tags:
+      - Discovery
+    servers:
+    - url: https://agents.kimetsu.dev
+  /agent-gateway.json:
+    get:
+      summary: Get agent gateway alias
+      description: Returns the same public directory as the root route.
+      operationId: get_agent_gateway_alias
+      security: []
+      responses:
+        '200':
+          description: Successful public response.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '400':
+          description: The request contained a query string or credential-bearing header.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '405':
+          description: The HTTP method is not supported for this route.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+      tags:
+      - Discovery
+    servers:
+    - url: https://agents.kimetsu.dev
+  /llms.txt:
+    get:
+      summary: Get LLM discovery guide
+      description: Returns a concise Markdown guide to public endpoints and the safety boundary.
+      operationId: get_llm_discovery_guide
+      tags:
+      - Discovery
+      security: []
+      responses:
+        '200':
+          description: The LLM discovery guide.
+          content:
+            text/plain:
+              schema:
+                type: string
+        '400':
+          description: The request contained a query string or credential-bearing header.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '405':
+          description: The HTTP method is not supported.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+    servers:
+    - url: https://agents.kimetsu.dev
+  /robots.txt:
+    get:
+      summary: Get crawler policy
+      description: Returns explicit public crawling permission for AI agents and general crawlers.
+      operationId: get_crawler_policy
+      tags:
+      - Discovery
+      security: []
+      responses:
+        '200':
+          description: The crawler policy.
+          content:
+            text/plain:
+              schema:
+                type: string
+        '400':
+          description: The request contained a query string or credential-bearing header.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '405':
+          description: The HTTP method is not supported.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+    servers:
+    - url: https://agents.kimetsu.dev
+  /openapi.json:
+    get:
+      summary: Get OpenAPI document
+      description: Returns this OpenAPI 3.1 interface contract.
+      operationId: get_openapi_document
+      security: []
+      responses:
+        '200':
+          description: Successful public response.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '400':
+          description: The request contained a query string or credential-bearing header.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '405':
+          description: The HTTP method is not supported for this route.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+      tags:
+      - Discovery
+    servers:
+    - url: https://agents.kimetsu.dev
+  /.well-known/kimetsu-agents.json:
+    get:
+      summary: Get well known directory
+      description: Returns a compact pointer to the gateway, project docs, and A2A Agent Card.
+      operationId: get_well_known_directory
+      security: []
+      responses:
+        '200':
+          description: Successful public response.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '400':
+          description: The request contained a query string or credential-bearing header.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '405':
+          description: The HTTP method is not supported for this route.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+      tags:
+      - Discovery
+    servers:
+    - url: https://agents.kimetsu.dev
+  /.well-known/agent-card.json:
+    get:
+      summary: Get A2A Agent Card
+      description: 'Returns A2A 0.3 by default. Send A2A-Version: 1.0 for the A2A 1.0 representation.'
+      operationId: get_a2a_agent_card
+      security: []
+      responses:
+        '200':
+          description: Successful public response.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '400':
+          description: The request contained a query string or credential-bearing header.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '405':
+          description: The HTTP method is not supported for this route.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+      tags:
+      - Discovery
+      parameters:
+      - name: A2A-Version
+        in: header
+        required: false
+        description: Requested A2A protocol representation.
+        schema:
+          type: string
+          enum:
+          - '0.3'
+          - '1.0'
+    servers:
+    - url: https://agents.kimetsu.dev
+  /.well-known/agent.json:
+    get:
+      summary: Get legacy A2A Agent Card
+      description: Legacy alias with behavior identical to the canonical Agent Card route.
+      operationId: get_legacy_a2a_agent_card
+      security: []
+      responses:
+        '200':
+          description: Successful public response.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '400':
+          description: The request contained a query string or credential-bearing header.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '405':
+          description: The HTTP method is not supported for this route.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+      tags:
+      - Discovery
+      parameters:
+      - name: A2A-Version
+        in: header
+        required: false
+        description: Requested A2A protocol representation.
+        schema:
+          type: string
+          enum:
+          - '0.3'
+          - '1.0'
+    servers:
+    - url: https://agents.kimetsu.dev
+  /health:
+    get:
+      summary: Get service health
+      description: Returns the current public gateway health status.
+      operationId: get_service_health
+      security: []
+      responses:
+        '200':
+          description: Successful public response.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '400':
+          description: The request contained a query string or credential-bearing header.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '405':
+          description: The HTTP method is not supported for this route.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+      tags:
+      - Discovery
+    servers:
+    - url: https://agents.kimetsu.dev
+  /v1/projects:
+    get:
+      summary: List projects
+      description: Returns the public Kimetsu project directory.
+      operationId: list_projects
+      security: []
+      responses:
+        '200':
+          description: Successful public response.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '400':
+          description: The request contained a query string or credential-bearing header.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '405':
+          description: The HTTP method is not supported for this route.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+      tags:
+      - Discovery
+    servers:
+    - url: https://agents.kimetsu.dev
+externalDocs:
+  description: Project discovery documentation
+  url: https://kimetsu.dev/projects/
+x-refined-from:
+- kimetsu-dev-agent-gateway-openapi.json
+- kimetsu-dev-agent-gateway-openapi.yml

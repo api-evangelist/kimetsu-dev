@@ -28,7 +28,7 @@ tags:
 - MCP
 - A2A
 - Developer Tools
-- Open-Source
+- Open Source
 - Rust
 - Agent Discovery
 - Public Goods
@@ -44,73 +44,29 @@ tags_raw:
 - Rust
 - Agent Discovery
 - Public Goods
+- Open-Source
 apis:
-- aid: kimetsu-dev:agent-gateway
-  name: kimetsu.dev Agent Gateway
-  description: 'Credential-free, read-only JSON discovery API on agents.kimetsu.dev (OpenAPI 3.1.0, 15 operations):
-    the gateway directory, llms.txt, robots.txt, the OpenAPI itself, the well-known directory pointer, the A2A card
-    (canonical and legacy paths), a health route, the project directory and the sanitized Sidequest Commons feeds
-    (participation gateway with quotas and GitHub action endpoints, proposals, winners, contribution passports), plus
-    one POST — the A2A JSON-RPC guidance endpoint. Rejects credentials (400) and query strings (400); writes return 405.'
-  humanURL: https://kimetsu.dev/projects/
-  baseURL: https://agents.kimetsu.dev
-  tags:
-  - Agent Discovery
-  - AI Agents
-  - Open-Source
-  - Public Goods
-  tags_raw:
-  - Agent Discovery
-  - AI Agents
-  - Open Source
-  - Public Goods
-  properties:
-  - type: OpenAPI
-    url: openapi/kimetsu-dev-agent-gateway-openapi.yml
-  - type: OpenAPI
-    name: OpenAPI (provider-hosted; verbatim copy in openapi/_original/)
-    url: https://agents.kimetsu.dev/openapi.json
-  - type: Documentation
-    url: https://kimetsu.dev/projects/
-  - type: APIReference
-    url: https://agents.kimetsu.dev/openapi.json
-  - type: LLMsTxt
-    url: llms/kimetsu-dev-agent-gateway-llms.txt
-  - type: Overlay
-    url: overlays/kimetsu-dev-agent-gateway-overlay.yaml
-  - type: Arazzo
-    name: Discover Sidequest Commons and ask the A2A guide
-    url: arazzo/kimetsu-dev-discover-and-ask-workflow.yml
-  - type: ErrorCatalog
-    url: errors/kimetsu-dev-problem-types.yml
-  - type: Authentication
-    url: authentication/kimetsu-dev-authentication.yml
-  - type: RateLimits
-    url: rate-limits/kimetsu-dev-rate-limits.yml
-  - type: DataModel
-    url: data-model/kimetsu-dev-data-model.yml
-  - type: JSONSchema
-    name: agent-directory-v1 (GET / and /agent-gateway.json)
-    url: json-schema/kimetsu-dev-agent-directory-v1.schema.json
-  image: https://kimetsu.dev/kimetsu-logo.png
 - aid: kimetsu-dev:sidequest-commons-guide
   name: Sidequest Commons Guide (A2A)
-  description: 'A2A agent (JSON-RPC; 0.3 message/send by default, 1.0 SendMessage with A2A-Version 1.0) that returns
-    deterministic, credential-free guidance on discovering Sidequest Commons and on proposing, voting and contributing
-    through GitHub. Two skills: discover_sidequests, explain_participation. No streaming, push notifications or tasks;
-    performs no writes and rejects credentials. Listed in the A2A Registry as dev.kimetsu.sidequest_commons_guide.'
+  description: >-
+    A2A agent (JSON-RPC; 0.3 message/send by default, 1.0 SendMessage with A2A-Version 1.0) that returns
+    deterministic, credential-free guidance on discovering Sidequest Commons and on proposing, voting
+    and contributing through GitHub. Two skills: discover_sidequests, explain_participation. No streaming,
+    push notifications or tasks; performs no writes and rejects credentials. Listed in the A2A Registry
+    as dev.kimetsu.sidequest_commons_guide.
   humanURL: https://rodcor.github.io/sidequest-commons/agents/
   baseURL: https://agents.kimetsu.dev/a2a/sidequest
   tags:
   - A2A
   - AI Agents
-  - Open-Source
+  - Open Source
   - Public Goods
   tags_raw:
   - A2A
   - AI Agents
   - Open Source
   - Public Goods
+  - Open-Source
   properties:
   - type: AgentCard
     url: a2a/kimetsu-dev-a2a.yml
@@ -129,12 +85,13 @@ apis:
   image: https://kimetsu.dev/kimetsu-logo.png
 - aid: kimetsu-dev:kimetsu-mcp-server
   name: Kimetsu MCP Server (local stdio)
-  description: 'The memory product''s agent surface: `kimetsu mcp serve` exposes ~28 kimetsu_* tools (context retrieval,
-    lesson recording, memory CRUD and curation, citations, conflict resolution, embedding-model management, repo ingest,
-    skill bridge) over stdio to Claude Code, Codex, Cursor, Pi, OpenClaw and Gemini CLI, backed by a per-project SQLite
-    brain with no cloud and no telemetry. No provider-hosted endpoint; Kimetsu Remote (beta) lets an operator self-host
-    the same surface over HTTP MCP with bearer tokens. Distributed as npm kimetsu-ai, crates.io kimetsu-cli and GitHub
-    Release archives (v2.8.0, 2026-09-09).'
+  description: >-
+    The memory product's agent surface: `kimetsu mcp serve` exposes ~28 kimetsu_* tools (context retrieval,
+    lesson recording, memory CRUD and curation, citations, conflict resolution, embedding-model management,
+    repo ingest, skill bridge) over stdio to Claude Code, Codex, Cursor, Pi, OpenClaw and Gemini CLI,
+    backed by a per-project SQLite brain with no cloud and no telemetry. No provider-hosted endpoint;
+    Kimetsu Remote (beta) lets an operator self-host the same surface over HTTP MCP with bearer tokens.
+    Distributed as npm kimetsu-ai, crates.io kimetsu-cli and GitHub Release archives (v2.8.0, 2026-09-09).
   humanURL: https://kimetsu.dev/docs/how-kimetsu-works/interfaces/
   tags:
   - MCP
@@ -160,6 +117,90 @@ apis:
   - type: SourceCode
     url: https://github.com/RodCor/kimetsu
   image: https://kimetsu.dev/kimetsu-logo.png
+- aid: kimetsu-dev:kimetsu-dev-a2a-api
+  name: Kimetsu A2A API
+  description: Deterministic guidance; no delegated actions or writes.
+  humanURL: https://kimetsu.dev/projects/
+  baseURL: https://agents.kimetsu.dev
+  tags:
+  - A2A
+  properties:
+  - type: OpenAPI
+    url: openapi/kimetsu-dev-a2a-api-openapi.yml
+  - type: Documentation
+    url: https://kimetsu.dev/projects/
+  - type: APIReference
+    url: https://agents.kimetsu.dev/openapi.json
+  - type: LLMsTxt
+    url: llms/kimetsu-dev-agent-gateway-llms.txt
+  - type: Arazzo
+    url: arazzo/kimetsu-dev-discover-and-ask-workflow.yml
+  - type: ErrorCatalog
+    url: errors/kimetsu-dev-problem-types.yml
+  - type: Authentication
+    url: authentication/kimetsu-dev-authentication.yml
+  - type: RateLimits
+    url: rate-limits/kimetsu-dev-rate-limits.yml
+  - type: DataModel
+    url: data-model/kimetsu-dev-data-model.yml
+  - type: JSONSchema
+    url: json-schema/kimetsu-dev-agent-directory-v1.schema.json
+- aid: kimetsu-dev:kimetsu-dev-discovery-api
+  name: Kimetsu Discovery API
+  description: Static, anonymous machine-discovery documents.
+  humanURL: https://kimetsu.dev/projects/
+  baseURL: https://agents.kimetsu.dev
+  tags:
+  - Discovery
+  properties:
+  - type: OpenAPI
+    url: openapi/kimetsu-dev-discovery-api-openapi.yml
+  - type: Documentation
+    url: https://kimetsu.dev/projects/
+  - type: APIReference
+    url: https://agents.kimetsu.dev/openapi.json
+  - type: LLMsTxt
+    url: llms/kimetsu-dev-agent-gateway-llms.txt
+  - type: Arazzo
+    url: arazzo/kimetsu-dev-discover-and-ask-workflow.yml
+  - type: ErrorCatalog
+    url: errors/kimetsu-dev-problem-types.yml
+  - type: Authentication
+    url: authentication/kimetsu-dev-authentication.yml
+  - type: RateLimits
+    url: rate-limits/kimetsu-dev-rate-limits.yml
+  - type: DataModel
+    url: data-model/kimetsu-dev-data-model.yml
+  - type: JSONSchema
+    url: json-schema/kimetsu-dev-agent-directory-v1.schema.json
+- aid: kimetsu-dev:kimetsu-dev-sidequest-api
+  name: Kimetsu Sidequest API
+  description: Read-only Sidequest Commons public data.
+  humanURL: https://kimetsu.dev/projects/
+  baseURL: https://agents.kimetsu.dev
+  tags:
+  - Sidequest
+  properties:
+  - type: OpenAPI
+    url: openapi/kimetsu-dev-sidequest-api-openapi.yml
+  - type: Documentation
+    url: https://kimetsu.dev/projects/
+  - type: APIReference
+    url: https://agents.kimetsu.dev/openapi.json
+  - type: LLMsTxt
+    url: llms/kimetsu-dev-agent-gateway-llms.txt
+  - type: Arazzo
+    url: arazzo/kimetsu-dev-discover-and-ask-workflow.yml
+  - type: ErrorCatalog
+    url: errors/kimetsu-dev-problem-types.yml
+  - type: Authentication
+    url: authentication/kimetsu-dev-authentication.yml
+  - type: RateLimits
+    url: rate-limits/kimetsu-dev-rate-limits.yml
+  - type: DataModel
+    url: data-model/kimetsu-dev-data-model.yml
+  - type: JSONSchema
+    url: json-schema/kimetsu-dev-agent-directory-v1.schema.json
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
@@ -257,3 +298,10 @@ x-enrichment:
   status: enriched
   artifacts_added: 41
   pass: local-v3
+x-a2a:
+  verified: true
+  probed: '2026-09-26'
+  url: "https://agents.kimetsu.dev/.well-known/agent-card.json"
+  grade: "conformant"
+  protocol_version: "0.3.0"
+  control: 404
