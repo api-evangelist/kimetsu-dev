@@ -1,11 +1,11 @@
 openapi: 3.2.0
 info:
-  title: Kimetsu Dev Discovery API
+  title: kimetsu.dev Agent Gateway Discovery API
   version: 1.0.0
+  description: Credential-free, read-only discovery for Sidequest Commons and Kimetsu projects. All reads are anonymous. Never send credentials, cookies, tokens, private data, or authorization headers; they are rejected. Query strings and caller-supplied fetch targets are also rejected.
   license:
     name: MIT
     identifier: MIT
-  description: 'Operations tagged Discovery across 2 of this provider''s published API definitions: kimetsu-dev-agent-gateway-openapi.json, kimetsu-dev-agent-gateway-openapi.yml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://agents.kimetsu.dev
 security: []
@@ -43,8 +43,6 @@ paths:
                 additionalProperties: true
       tags:
       - Discovery
-    servers:
-    - url: https://agents.kimetsu.dev
   /agent-gateway.json:
     get:
       summary: Get agent gateway alias
@@ -75,8 +73,6 @@ paths:
                 additionalProperties: true
       tags:
       - Discovery
-    servers:
-    - url: https://agents.kimetsu.dev
   /llms.txt:
     get:
       summary: Get LLM discovery guide
@@ -106,8 +102,6 @@ paths:
               schema:
                 type: object
                 additionalProperties: true
-    servers:
-    - url: https://agents.kimetsu.dev
   /robots.txt:
     get:
       summary: Get crawler policy
@@ -137,8 +131,6 @@ paths:
               schema:
                 type: object
                 additionalProperties: true
-    servers:
-    - url: https://agents.kimetsu.dev
   /openapi.json:
     get:
       summary: Get OpenAPI document
@@ -169,8 +161,6 @@ paths:
                 additionalProperties: true
       tags:
       - Discovery
-    servers:
-    - url: https://agents.kimetsu.dev
   /.well-known/kimetsu-agents.json:
     get:
       summary: Get well known directory
@@ -201,8 +191,6 @@ paths:
                 additionalProperties: true
       tags:
       - Discovery
-    servers:
-    - url: https://agents.kimetsu.dev
   /.well-known/agent-card.json:
     get:
       summary: Get A2A Agent Card
@@ -243,8 +231,6 @@ paths:
           enum:
           - '0.3'
           - '1.0'
-    servers:
-    - url: https://agents.kimetsu.dev
   /.well-known/agent.json:
     get:
       summary: Get legacy A2A Agent Card
@@ -285,8 +271,6 @@ paths:
           enum:
           - '0.3'
           - '1.0'
-    servers:
-    - url: https://agents.kimetsu.dev
   /health:
     get:
       summary: Get service health
@@ -317,8 +301,6 @@ paths:
                 additionalProperties: true
       tags:
       - Discovery
-    servers:
-    - url: https://agents.kimetsu.dev
   /v1/projects:
     get:
       summary: List projects
@@ -349,11 +331,6 @@ paths:
                 additionalProperties: true
       tags:
       - Discovery
-    servers:
-    - url: https://agents.kimetsu.dev
 externalDocs:
   description: Project discovery documentation
   url: https://kimetsu.dev/projects/
-x-refined-from:
-- kimetsu-dev-agent-gateway-openapi.json
-- kimetsu-dev-agent-gateway-openapi.yml

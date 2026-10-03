@@ -1,27 +1,26 @@
 {
   "provider": "kimetsu-dev",
   "sources": [
-    "_original/kimetsu-dev-agent-gateway-openapi.json",
-    "kimetsu-dev-agent-gateway-openapi.yml"
+    "_original/kimetsu-dev-agent-gateway-openapi.json"
   ],
   "outputs": [
     "kimetsu-dev-a2a-api-openapi.yml",
     "kimetsu-dev-discovery-api-openapi.yml",
     "kimetsu-dev-sidequest-api-openapi.yml"
   ],
-  "archived": [
-    "archived openapi/kimetsu-dev-agent-gateway-openapi.yml"
-  ],
+  "archived": [],
   "errors": [],
   "warnings": [],
   "notes": [
+    "1 archived document(s) dropped as subsets of other archived documents",
     "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
     "kimetsu-dev-agent-gateway-openapi.json: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
-    "kimetsu-dev-agent-gateway-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
-    "tag 'A2A' spans 2 source specs (kimetsu-dev-agent-gateway-openapi.json, kimetsu-dev-agent-gateway-openapi.yml): per-path servers applied",
-    "tag 'Discovery' spans 2 source specs (kimetsu-dev-agent-gateway-openapi.json, kimetsu-dev-agent-gateway-openapi.yml): per-path servers applied",
-    "tag 'Sidequest' spans 2 source specs (kimetsu-dev-agent-gateway-openapi.json, kimetsu-dev-agent-gateway-openapi.yml): per-path servers applied",
-    "apis.yml register: written (+3 apis, 5 total)"
+    "apis.yml register: already-registered"
   ],
-  "skipped": []
+  "skipped": [
+    "_original/kimetsu-dev-agent-gateway-openapi.yml: archived document superseded by a larger archived document",
+    "kimetsu-dev-a2a-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "kimetsu-dev-discovery-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "kimetsu-dev-sidequest-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }
