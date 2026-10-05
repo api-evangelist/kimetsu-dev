@@ -1,0 +1,12 @@
+{
+ "url": "https://agents.kimetsu.dev/openapi.json",
+ "requested_url": "https://agents.kimetsu.dev/openapi.json",
+ "status": 200,
+ "content_type": "application/json; charset=utf-8",
+ "bytes": 24166,
+ "sha256": "ddccc521c04bad27d8daaaf46a5368b36833448d497be1cdf49eb8e72be50921",
+ "fetched_at": "2026-10-04",
+ "fetched_by": "APIEvangelist-Harvest/1.0 (+https://apievangelist.com)",
+ "match": "byte-identical",
+ "note": "Re-fetched from the provider by verify-openapi-sources.py; the archived file is byte-identical to what the provider serves."
+}
