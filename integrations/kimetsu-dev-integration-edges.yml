@@ -1,0 +1,85 @@
+edges:
+- partner_name: crates.io
+  partner: crates-io
+  partner_match: register
+  type: register
+  direction: provider-built
+  category: official SDK (Rust)
+  evidence: https://crates.io/crates/kimetsu-agent
+  channel: package-registry
+  relationship: distribution-channel
+  contract_reference:
+    register: crates.io (public registry JSON)
+    spec_file: null
+    language: Rust
+    packages:
+    - name: kimetsu-agent
+      version: 2.9.0
+      released: '2026-10-13'
+      released_field: updated_at
+      lapsed: false
+      page: https://crates.io/crates/kimetsu-agent
+      repo_leg: github-org:rodcor
+      publisher_leg: org:rodcor
+      matched_by: github-org
+    - name: kimetsu-brain
+      version: 2.9.0
+      released: '2026-10-13'
+      released_field: updated_at
+      lapsed: false
+      page: https://crates.io/crates/kimetsu-brain
+      repo_leg: github-org:rodcor
+      publisher_leg: org:rodcor
+      matched_by: github-org
+    - name: kimetsu-chat
+      version: 2.9.0
+      released: '2026-10-13'
+      released_field: updated_at
+      lapsed: false
+      page: https://crates.io/crates/kimetsu-chat
+      repo_leg: github-org:rodcor
+      publisher_leg: org:rodcor
+      matched_by: github-org
+    - name: kimetsu-cli
+      version: 2.9.0
+      released: '2026-10-13'
+      released_field: updated_at
+      lapsed: false
+      page: https://crates.io/crates/kimetsu-cli
+      repo_leg: github-org:rodcor
+      publisher_leg: org:rodcor
+      matched_by: github-org
+    - name: kimetsu-core
+      version: 2.9.0
+      released: '2026-10-13'
+      released_field: updated_at
+      lapsed: false
+      page: https://crates.io/crates/kimetsu-core
+      repo_leg: github-org:rodcor
+      publisher_leg: org:rodcor
+      matched_by: github-org
+    current: true
+    signal_note: 'an official package on the registry: distribution, not an integration; lapsed = no release in
+      24 months'
+    detected_by: sweep-official-sdks.py
+    detected: '2026-10-18'
+  detected_by: sweep-official-sdks.py
+  first_seen: '2026-10-18'
+generated: '2026-10-18'
+method: searched
+source:
+- https://api.nuget.org/v3
+- https://crates.io/api/v1
+- https://proxy.golang.org
+- https://pypi.org/pypi
+- https://registry.npmjs.org
+- https://repo1.maven.org/maven2
+- https://rubygems.org/api/v1
+checked:
+- https://api.nuget.org/v3
+- https://crates.io/api/v1
+- https://proxy.golang.org
+- https://pypi.org/pypi
+- https://registry.npmjs.org
+- https://repo1.maven.org/maven2
+- https://rubygems.org/api/v1
